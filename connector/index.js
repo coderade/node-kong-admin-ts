@@ -1,14 +1,13 @@
 'use strict';
 
 // External libraries
-const UNIREST = require('unirest');
+const axios = require('axios');
 const debug = require('debug')('node:kong:admin:connector');
 
 // Library definitions
 const TIMEOUT = 60000;
 
-
-class connector {
+class Connector {
   constructor(queryString) {
     this.baseUrl = queryString.url;
     this.authParams = queryString.auth || null;
@@ -21,230 +20,222 @@ class connector {
     };
   }
 
+  auth() {
 
-  auth(cb) {
-
-    const self = this;
-
-    if (self.requestHeaders.Authorization || !this.authParams) return cb();
-
-    const data = {
-      username: self.authUser,
-      password: self.authPass,
+    const path = this.baseUrl + '/Users/login';
+    const options = {
+      headers: this.requestHeaders,
     };
 
+    return new Promise((resolve, reject) => {
 
-    UNIREST.post(self.baseUrl + '/Users/login')
-      .headers(self.requestHeaders)
-      .send(data)
-      .timeout(TIMEOUT)
-      .end(function(response) {
+      if (this.requestHeaders.Authorization || !this.authParams) {
+        resolve(null);
+      } else {
+        const data = {
+          username: this.authUser,
+          password: this.authPass,
+        };
+
+        axios.post(path, data, options).then(res => {
+
+          this.requestHeaders.Authorization = res.body.id;
+          resolve(res.data);
+
+        }).catch(err => {
+          const response = {
+            error: err.error,
+            body: err.body,
+          };
+          reject(response);
+        });
+      }
 
 
-        if (response.error) {
-          return cb({
-            error: response.error,
-            body: response.body,
-          });
-        }
+    });
 
+  };
 
-        self.requestHeaders.Authorization = response.body.id;
+  get(path, queryString) {
 
-        cb();
+    const url = this.baseUrl + path;
+
+    return new Promise((resolve, reject) => {
+      this.auth().then(() => {
+
+        const options = {
+          headers: this.requestHeaders,
+          params: queryString || {},
+        };
+
+        axios.get(url, options).then(res => {
+          resolve(res.data);
+        }).catch(err => {
+          if (err.code === 404) {
+            resolve();
+          } else {
+            reject(err.message);
+          }
+        });
+
+      }).catch(err => {
+        reject(err);
       });
-  };
-
-  get(path, queryString, cb) {
-
-    const self = this;
-
-    self.auth(function(err) {
-      if (err) return cb(err);
-
-
-      UNIREST.get(self.baseUrl + path)
-        .query(queryString || {})
-        .headers(self.requestHeaders)
-        .timeout(TIMEOUT)
-        .end(function(response) {
-
-
-          if (response.error) {
-            // This is the only situation where a 404 error must be ignored
-            if (response.code === 404) return cb();
-            return cb(response.body);
-          }
-
-          cb(null, response.body);
-        });
     });
-  };
 
-  post(path, data, queryString, cb) {
+  }
 
-    const self = this;
+  post(path, data, queryString) {
 
-    self.auth(function(err) {
-      if (err) return cb(err);
+    const url = this.baseUrl + path;
 
+    return new Promise((resolve, reject) => {
+      this.auth().then(() => {
 
-      UNIREST.post(self.baseUrl + path)
-        .query(queryString || {})
-        .headers(self.requestHeaders)
-        .send(data)
-        .timeout(TIMEOUT)
-        .end(function(response) {
+        const options = {
+          headers: this.requestHeaders,
+          params: queryString || {},
+        };
 
-
-          if (response.error) {
-            return cb(response.body);
-          }
-
-
-          cb(null, response.body);
+        axios.post(url, data, options).then(res => {
+          resolve(res.data);
+        }).catch(err => {
+          reject(err.message);
         });
+
+      }).catch(err => {
+        reject(err);
+      });
     });
-  };
+
+  }
 
   postFile(path, filePath, queryString, cb) {
 
-
-    const self = this;
-
-    self.auth(function(err) {
-      if (err) return cb(err);
+    this.auth(
+      function(err) {
+        if (err) return cb(err);
 
 
-      UNIREST.post(self.baseUrl + path)
-        .query(queryString || {})
-        .headers(self.requestHeaders)
-        .attach('file', filePath, {
-          contentType: 'application/json',
-        })
-        .timeout(TIMEOUT)
-        .end(function(response) {
+        UNIREST.post(self.baseUrl + path)
+          .query(queryString || {})
+          .headers(self.requestHeaders)
+          .attach('file', filePath, {
+            contentType: 'application/json',
+          })
+          .timeout(TIMEOUT)
+          .end(function(response) {
 
 
-          if (response.error) {
-            return cb(response.body);
-          }
+            if (response.error) {
+              return cb(response.body);
+            }
 
 
-          cb(null, response.body);
-        });
+            cb(null, response.body);
+          });
 
-    });
+      });
 
-  };
+  }
 
   put(path, data, queryString, cb) {
 
+    const url = this.baseUrl + path;
 
-    const self = this;
+    return new Promise((resolve, reject) => {
+      this.auth().then(() => {
 
-    self.auth(function(err) {
-      if (err) return cb(err);
+        const options = {
+          headers: this.requestHeaders,
+          params: queryString || {},
+        };
 
-
-      UNIREST.put(self.baseUrl + path)
-        .query(queryString || {})
-        .headers(self.requestHeaders)
-        .send(data)
-        .timeout(TIMEOUT)
-        .end(function(response) {
-
-          if (response.error) {
-            return cb(response.body);
-          }
-
-          cb(null, response.body);
+        axios.put(url, data, options).then(res => {
+          resolve(res.data);
+        }).catch(err => {
+          reject(err.message);
         });
+
+      }).catch(err => {
+        reject(err);
+      });
     });
-  };
+
+  }
 
   patch(path, data, queryString, cb) {
 
+    const url = this.baseUrl + path;
 
-    const self = this;
+    return new Promise((resolve, reject) => {
+      this.auth().then(() => {
 
-    self.auth(function(err) {
-      if (err) return cb(err);
+        const options = {
+          headers: this.requestHeaders,
+          params: queryString || {},
+        };
 
-
-      UNIREST.patch(self.baseUrl + path)
-        .query(queryString || {})
-        .headers(self.requestHeaders)
-        .send(data)
-        .timeout(TIMEOUT)
-        .end(function(response) {
-
-          if (response.error) {
-            return cb(response.body);
-          }
-
-          cb(null, response.body);
+        axios.patch(url, data, options).then(res => {
+          resolve(res.data);
+        }).catch(err => {
+          reject(err.message);
         });
+
+      }).catch(err => {
+        reject(err);
+      });
     });
-  };
 
-  delete(path, queryString, cb) {
+  }
 
+  delete(path, queryString) {
 
-    const self = this;
+    const url = this.baseUrl + path;
 
-    self.auth(function(err) {
-      if (err) return cb(err);
+    return new Promise((resolve, reject) => {
+      this.auth().then(() => {
 
+        const options = {
+          headers: this.requestHeaders,
+          params: queryString || {},
+        };
 
-      UNIREST.delete(self.baseUrl + path)
-        .query(queryString || {})
-        .headers(self.requestHeaders)
-        .timeout(TIMEOUT)
-        .end(function(response) {
-
-
-          if (response.error) {
-            return cb(response.body);
-          }
-
-
-          cb();
+        axios.delete(url, options).then(res => {
+          resolve();
+        }).catch(err => {
+          reject(err.message);
         });
+
+      }).catch(err => {
+        reject(err);
+      });
     });
-  };
 
-  execute(action, url, data, queryString, cb) {
+  }
 
+  execute(action, url, data, queryString) {
 
-    if (data) {
+    return new Promise((resolve, reject) => {
 
-      this[action](url, data, queryString, function(err, results) {
+      if (data) {
 
-        if (err) {
-          return cb(err);
-        }
+        this[action](url, data, queryString).then(results => {
+          resolve(results);
+        }).catch(err => {
+          reject(err);
+        });
 
+      } else {
 
-        cb(null, results);
-
-      });
-    } else {
-
-
-      this[action](url, queryString, function(err, results) {
-
-        if (err) {
-          return cb(err);
-        }
-
-
-        cb(null, results);
-
-      });
-    }
-
-  };
+        this[action](url, queryString).then(results => {
+          resolve(results);
+        }).catch(err => {
+          reject(err);
+        });
+      }
+    });
+  }
 
 }
 

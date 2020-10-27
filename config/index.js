@@ -1,13 +1,13 @@
 'use strict';
 
-const CONNECTOR = require('../connector');
+const Connector = require('../connector');
 
 class Config {
 
   constructor(params) {
     this.params = params;
 
-    this.connector = new CONNECTOR(params);
+    this.connector = new Connector(params);
   }
 
   dbLess = function(filePath, cb) {

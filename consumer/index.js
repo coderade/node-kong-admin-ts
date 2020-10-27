@@ -1,91 +1,113 @@
 'use strict';
 
-const CONNECTOR = require('../connector');
+const Connector = require('../connector');
 
 class Consumer {
 
   constructor(params) {
 
     this.params = params;
-    this.connector = new CONNECTOR(params);
+    this.connector = new Connector(params);
 
   }
 
-  create(data, cb) {
+  create(data) {
+    const url = '/consumers';
+    return this.connector.execute('post', url, this.validate(data), null);
+  };
 
-    this.connector.execute('post', '/consumers', this.validate(data), null, cb);
+  get(usernameOrId) {
+    const url = '/consumers/' + usernameOrId;
+    return this.connector.execute('get', url, null, null);
+  };
+
+  getByPlugin(pluginId) {
+    const url = '/plugins/' + pluginId + '/consumer';
+    return this.connector.execute('get', url, null, null);
+  };
+
+  list(offset) {
+
+    const url = '/routes';
+    const queryString = offset ? {offset: offset} : null;
+    return this.connector.execute('get', url, null, queryString);
 
   };
 
-  get(usernameOrId, cb) {
+  update(data) {
 
-    this.connector.execute('get', '/consumers/' + usernameOrId, null, null, cb);
+    const url = '/consumers/' + (data.id || data.username);
+    data = this.validate(data);
 
-  };
-
-  getByPlugin(pluginId, cb) {
-
-    this.connector.execute('get', '/plugins/' + pluginId + '/consumer', null, null, cb);
+    return this.connector.execute('patch', url, data, null);
 
   };
 
-  list(offset, cb) {
+  updateByPlugin(pluginId, data) {
 
-    this.connector.execute('get', '/routes', null, offset ? {offset: offset} : null, cb);
+    const url = '/plugins/' + pluginId + '/route';
+    data = this.validate(data);
 
-  };
-
-  update(data, cb) {
-
-    this.connector.execute('patch', '/consumers/' + (data.id || data.username), this.validate(data), null, cb);
+    return this.connector.execute('patch', url, data, null);
 
   };
 
-  updateByPlugin(pluginId, data, cb) {
+  updateOrCreate(data) {
 
-    this.connector.execute('patch', '/plugins/' + pluginId + '/route', this.validate(data), null, cb);
+    const url = '/consumers/' + (data.id || data.name);
+    data = this.validate(data);
 
-  };
-
-  updateOrCreate(data, cb) {
-
-    this.connector.execute('put', '/consumers/' + (data.id || data.name), this.validate(data), null, cb);
+    return this.connector.execute('put', url, data, null);
 
   };
 
-  updateOrCreateByPlugin(pluginId, data, cb) {
+  updateOrCreateByPlugin(pluginId, data) {
 
-    this.connector.execute('put', '/plugins/' + pluginId + '/consumer', this.validate(data), null, cb);
+    const url = '/plugins/' + pluginId + '/consumer';
+    data = this.validate(data);
 
-  };
-
-  createKeyAuthCredentials(consumerIdOrUsername, key, cb) {
-
-    this.connector.execute('post', '/consumers/' + consumerIdOrUsername + '/key-auth', {key: key}, null, cb);
+    return this.connector.execute('put', url, data, null);
 
   };
 
-  listKeyAuthCredentials(consumerIdOrUsername, cb) {
+  createKeyAuthCredentials(consumerIdOrUsername, key) {
 
-    this.connector.execute('get', '/consumers/' + consumerIdOrUsername + '/key-auth', null, null, cb);
+    const url = '/consumers/' + consumerIdOrUsername + '/key-auth';
+    const data = {key: key};
+
+    return this.connector.execute('post', url, data, null);
 
   };
 
-  deleteKeyAuthCredentials(consumerIdOrUsername, keyId, cb) {
+  listKeyAuthCredentials(consumerIdOrUsername) {
 
-    this.connector.execute('delete', '/consumers/' + consumerIdOrUsername + '/key-auth/' + keyId, null, null, cb);
+    const url = '/consumers/' + consumerIdOrUsername + '/key-auth';
+
+    return this.connector.execute('get', url, null, null);
+
+  };
+
+  deleteKeyAuthCredentials(consumerIdOrUsername, keyId) {
+
+    const url = '/consumers/' + consumerIdOrUsername + '/key-auth/' + keyId;
+
+    return this.connector.execute('delete', url, null, null);
 
   };
 
   delete(nameOrId, cb) {
 
-    this.connector.execute('delete', '/consumers/' + nameOrId, null, null, cb);
+    const url = '/consumers/' + nameOrId;
+
+    return this.connector.execute('delete', url, null, null, cb);
 
   };
 
   validate(data) {
 
-    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
+    if (!data || !(data instanceof Object)) {
+      throw new Error('Data must be an Object!');
+    }
 
     return {
       'username': data.username,

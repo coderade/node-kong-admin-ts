@@ -1,5 +1,7 @@
+# Libs
 /node_modules
-/package-lock.json
+
+# IDE stuff
 .idea
 .DS_Store
 
