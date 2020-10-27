@@ -13,23 +13,24 @@ const PLUGIN = require('./plugin');
 const CERTIFICATE = require('./certificate');
 const SNI = require('./sni');
 
-function Kong(params) {
+class Kong {
 
-    const PARAMS = {
-        url: params.url || 'https://localhost:8001'
-    };
+  constructor(params) {
 
-    this.config = new CONFIG(PARAMS);
-    this.node = new NODE(PARAMS);
-    this.tag = new TAG(PARAMS);
-    this.service = new SERVICE(PARAMS);
-    this.route = new ROUTE(PARAMS);
-    this.upstream = new UPSTREAM(PARAMS);
-    this.target = new TARGET(PARAMS);
-    this.consumer = new CONSUMER(PARAMS);
-    this.plugin = new PLUGIN(PARAMS);
-    this.certificate = new CERTIFICATE(PARAMS);
-    this.sni = new SNI(PARAMS);
+    this.url = params.url || 'https://localhost:8001';
+
+    this.config = new CONFIG({url: this.url});
+    this.node = new NODE({url: this.url});
+    this.tag = new TAG({url: this.url});
+    this.service = new SERVICE({url: this.url});
+    this.route = new ROUTE({url: this.url});
+    this.upstream = new UPSTREAM({url: this.url});
+    this.target = new TARGET({url: this.url});
+    this.consumer = new CONSUMER({url: this.url});
+    this.plugin = new PLUGIN({url: this.url});
+    this.certificate = new CERTIFICATE({url: this.url});
+    this.sni = new SNI({url: this.url});
+  }
 
 }
 

@@ -1,9 +1,9 @@
 {
-  "name": "node-kong-admin",
-  "version": "1.0.2",
-  "description": "A Kong Admin API Client for NodeJS",
-  "homepage": "https://github.com/wesleymilan/node-kong-admin",
-  "author": "Wesley Milan",
+  "name": "node-kong-admin-es6",
+  "version": "1.0.1",
+  "description": "A port of the  Kong Admin API Client for NodeJS develop with es6 of the https://github.com/wesleymilan/node-kong-admin",
+  "homepage": "https://github.com/coderade/node-kong-admin-es6",
+  "author": "Valdeci Gomes",
   "engines": {
     "node": ">=10"
   },
@@ -16,15 +16,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wesleymilan/node-kong-admin"
+    "url": "https://github.com/coderade/node-kong-admin-es6"
   },
   "bugs": {
-    "url": "https://github.com/wesleymilan/node-kong-admin/issues"
+    "url": "https://github.com/coderade/node-kong-admin-es6/issues"
   },
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
-    "debug": "^3.1.0",
     "unirest": "^0.6.0"
   }
 }

@@ -2,73 +2,76 @@
 
 const CONNECTOR = require('../connector');
 
-function SNI(params) {
+class SNI {
 
+  constructor(params) {
     this.params = params;
-
     this.connector = new CONNECTOR(params);
 
-}
+  }
 
-SNI.prototype.create = function(data, cb) {
+  create(data, cb) {
 
     this.connector.execute('post', '/snis', this.validate(data), null, cb);
 
-};
+  };
 
-SNI.prototype.createByCertificate = function(certificateNameOrId, data, cb) {
+  createByCertificate(certificateNameOrId, data, cb) {
 
     this.connector.execute('post', '/certificates/' + certificateNameOrId + '/snis', this.validate(data), null, cb);
 
-};
+  };
 
-SNI.prototype.get = function(sniId, cb) {
+  get(sniId, cb) {
 
     this.connector.execute('get', '/snis/' + sniId, null, null, cb);
 
-};
+  };
 
-SNI.prototype.list = function(offset, cb) {
+  list(offset, cb) {
 
-    this.connector.execute('get', '/snis', null, { offset: offset}, cb);
+    this.connector.execute('get', '/snis', null, {offset: offset}, cb);
 
-};
+  };
 
-SNI.prototype.listByCertificate = function(certificateNameOrId, offset, cb) {
+  listByCertificate(certificateNameOrId, offset, cb) {
 
-    this.connector.execute('get', '/certificates/' + certificateNameOrId + '/snis', null, { offset: offset}, cb);
+    this.connector.execute('get', '/certificates/' + certificateNameOrId + '/snis', null, {offset: offset}, cb);
 
-};
+  };
 
-SNI.prototype.update = function(data, cb) {
+  update(data, cb) {
 
     this.connector.execute('patch', '/snis/' + (data.id || data.name), this.validate(data), null, cb);
 
-};
+  };
 
-SNI.prototype.updateOrCreate = function(data, cb) {
+  updateOrCreate(data, cb) {
 
     this.connector.execute('put', '/snis/' + (data.id || data.name), this.validate(data), null, cb);
 
-};
+  };
 
-SNI.prototype.delete = function(sniNameOrId, cb) {
+  delete(sniNameOrId, cb) {
 
     this.connector.execute('delete', '/snis/' + sniNameOrId, null, null, cb);
 
-};
+  };
 
-SNI.prototype.validate = function(data) {
+  validate(data) {
 
-    if(!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
+    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
 
     return {
-        "name": data.name,
-        "tags": data.tags,
-        "certificate": data.certificate
+      'name': data.name,
+      'tags': data.tags,
+      'certificate': data.certificate,
     };
 
-};
+  };
+
+}
+
 
 module.exports = SNI;
 
