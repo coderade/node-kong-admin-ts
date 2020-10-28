@@ -6,13 +6,12 @@ class Config {
 
   constructor(params) {
     this.params = params;
-
     this.connector = new Connector(params);
   }
 
-  dbLess = function(filePath, cb) {
+  dbLess = function(filePath) {
 
-    this.connector.execute('postFile', '/config', filePath, null, cb);
+    return this.connector.execute('postFile', '/config', filePath, null);
 
   };
 

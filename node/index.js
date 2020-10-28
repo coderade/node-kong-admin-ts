@@ -8,12 +8,12 @@ class Node {
     this.connector = new Connector(params);
   }
 
-  get(cb) {
-    this.connector.execute('get', '/', null, null, cb);
+  get() {
+    return this.connector.execute('get', '/', null, null);
   };
 
-  status(cb) {
-    this.connector.execute('get', '/status', null, null, cb);
+  status() {
+    return this.connector.execute('get', '/status', null, null);
   };
 }
 

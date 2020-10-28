@@ -1,5 +1,4 @@
 'use strict';
-
 const Connector = require('../connector');
 
 class Certificate {
@@ -9,52 +8,37 @@ class Certificate {
     this.connector = new Connector(params);
   }
 
-  create(data, cb) {
-
-    this.connector.execute('post', '/certificates', this.validate(data), null, cb);
-
+  create(data) {
+    const url = '/certificates';
+    data = this.validate(data);
+    return this.connector.execute('post', url, data, null);
   };
 
-  get(certificateId, cb) {
-
-    this.connector.execute('get', '/certificates/' + certificateId, null, null, cb);
-
+  get(certificateId) {
+    const url = '/certificates/' + certificateId;
+    return this.connector.execute('get', url, null, null);
   };
 
-  list(offset, cb) {
-
-    this.connector.execute('get', '/certificates', null, {offset: offset}, cb);
-
+  list(offset) {
+    const url = '/certificates';
+    return this.connector.execute('get', url, null, {offset: offset});
   };
 
-  update(data, cb) {
-
-    this.connector.execute('patch', '/certificates/' + data.id, this.validate(data), null, cb);
-
+  update(data) {
+    const url = '/certificates/' + data.id;
+    data = this.validate(data);
+    return this.connector.execute('patch', url, data, null);
   };
 
-  updateOrCreate(data, cb) {
-
-    this.connector.execute('put', '/certificates/' + data.id, this.validate(data), null, cb);
-
+  updateOrCreate(data) {
+    const url = '/certificates/' + data.id;
+    data = this.validate(data);
+    return this.connector.execute('put', url, data, null);
   };
 
-  delete(certificateId, cb) {
-
-    this.connector.execute('delete', '/certificates/' + certificateId, null, null, cb);
-
-  };
-
-  validate(data) {
-
-    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
-
-    return {
-      'cert': data.cert,
-      'key': data.key,
-      'tags': data.tags,
-      'snis': data.snis,
-    };
+  delete(certificateId) {
+    const url = '/certificates/' + certificateId;
+    return this.connector.execute('delete', url, null, null);
 
   };
 }

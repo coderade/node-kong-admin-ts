@@ -9,94 +9,94 @@ class Plugin {
     this.connector = new Connector(params);
   }
 
-  create(data, cb) {
-
-    this.connector.execute('post', '/plugins', this.validate(data), null, cb);
-
+  create(data) {
+    const url = '/plugins';
+    data = this.validate(data);
+    return this.connector.execute('post', url, data, null);
   };
 
   createByRoute(routeId, data, cb) {
-
-    this.connector.execute('post', '/routes/' + routeId + '/plugins', this.validate(data), null, cb);
-
+    const url = '/routes/' + routeId + '/plugins';
+    data = this.validate(data);
+    return this.connector.execute('post', url, data, null);
   };
 
-  createByService(serviceId, data, cb) {
-
-    this.connector.execute('post', '/services/' + serviceId + '/plugins', this.validate(data), null, cb);
-
+  createByService(serviceId, data) {
+    const url = '/services/' + serviceId + '/plugins';
+    data = this.validate(data);
+    return this.connector.execute('post', url, data, null);
   };
 
-  createByConsumer(consumerId, data, cb) {
-
-    this.connector.execute('post', '/consumers/' + consumerId + '/plugins', this.validate(data), null, cb);
-
+  createByConsumer(consumerId, data) {
+    const url = '/consumers/' + consumerId + '/plugins';
+    data = this.validate(data);
+    return this.connector.execute('post', url, data, null);
   };
 
-  get(pluginId, cb) {
-
-    this.connector.execute('get', '/plugins/' + pluginId, null, null, cb);
-
+  get(pluginId) {
+    const url = '/plugins/' + pluginId;
+    return this.connector.execute('get', url, null, null);
   };
 
 
-  getEnabledPlugins(cb) {
-
-    this.connector.execute('get', '/plugins/enabled', null, null, cb);
-
+  getEnabledPlugins() {
+    const url = '/plugins/enabled';
+    return this.connector.execute('get', url, null, null);
   };
 
-  getSchema(pluginName, cb) {
-
-    this.connector.execute('get', '/plugins/schema/' + pluginName, null, null, cb);
-
+  getSchema(pluginName) {
+    const url = '/plugins/schema/' + pluginName;
+    return this.connector.execute('get', url, null, null);
   };
 
-  list(offset, cb) {
-
-    this.connector.execute('get', '/plugins', null, offset ? {offset: offset} : null, cb);
-
+  list(offset) {
+    const url = '/plugins';
+    const queryString = offset ? {offset: offset} : null;
+    return this.connector.execute('get', url, null, queryString);
   };
 
-  listByRoute(routeId, offset, cb) {
-
-    this.connector.execute('get', '/routes/' + routeId + '/plugins', null, offset ? {offset: offset} : null, cb);
-
+  listByRoute(routeId, offset) {
+    const url = '/routes/' + routeId + '/plugins';
+    const queryString = offset ? {offset: offset} : null;
+    return this.connector.execute('get', url, null, queryString);
   };
 
   listByService(serviceId, offset, cb) {
+    const url = '/services/' + serviceId + '/plugins';
+    const queryString = offset ? {offset: offset} : null;
+    return this.connector.execute('get', url, null, queryString);
+  };
 
-    this.connector.execute('get', '/services/' + serviceId + '/plugins', null, offset ? {offset: offset} : null, cb);
+  listByConsumer(consumerId, offset) {
+    const url = '/consumers/' + consumerId + '/plugins';
+    const queryString = offset ? {offset: offset} : null;
+    return this.connector.execute('get', url, null, queryString);
+  };
+
+  update(data) {
+    const url = '/plugins/' + data.id;
+    data = this.validate(data);
+    return this.connector.execute('patch', url, data, null);
+  };
+
+  updateOrCreate(data) {
+    const url = '/plugins/' + data.id;
+    data = this.validate(data);
+    return this.connector.execute('put', url, data, null);
 
   };
 
-  listByConsumer(consumerId, offset, cb) {
-
-    this.connector.execute('get', '/consumers/' + consumerId + '/plugins', null, offset ? {offset: offset} : null, cb);
-
-  };
-
-  update(data, cb) {
-
-    this.connector.execute('patch', '/plugins/' + data.id, this.validate(data), null, cb);
-
-  };
-
-  updateOrCreate(data, cb) {
-
-    this.connector.execute('put', '/plugins/' + data.id, this.validate(data), null, cb);
-
-  };
-
-  delete(pluginId, cb) {
-
-    this.connector.execute('delete', '/plugins/' + pluginId, null, null, cb);
+  delete(pluginId) {
+    const url = '/plugins/' + pluginId;
+    return this.connector.execute('delete', url, null, null);
 
   };
 
   validate(data) {
 
-    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
+    if (!data || !(data instanceof Object)) {
+      throw new Error('Data must be an Object!');
+    }
 
     return {
       'name': data.name,

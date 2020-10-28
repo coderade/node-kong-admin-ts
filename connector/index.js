@@ -2,6 +2,7 @@
 
 // External libraries
 const axios = require('axios');
+const fs = require('fs');
 const debug = require('debug')('node:kong:admin:connector');
 
 // Library definitions
@@ -11,7 +12,7 @@ class Connector {
   constructor(queryString) {
     this.baseUrl = queryString.url;
     this.authParams = queryString.auth || null;
-    this.requestHeaders = {
+    this.headers = {
       'User-Agent': 'NODE-KONG-ADMIN-1.0.0 (pid: ' + process.pid + ', uid: ' + process.getuid() + ')',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -24,14 +25,17 @@ class Connector {
 
     const path = this.baseUrl + '/Users/login';
     const options = {
-      headers: this.requestHeaders,
+      headers: this.headers
     };
 
     return new Promise((resolve, reject) => {
 
-      if (this.requestHeaders.Authorization || !this.authParams) {
+      if (this.headers.Authorization || !this.authParams) {
+
         resolve(null);
+
       } else {
+
         const data = {
           username: this.authUser,
           password: this.authPass,
@@ -39,7 +43,7 @@ class Connector {
 
         axios.post(path, data, options).then(res => {
 
-          this.requestHeaders.Authorization = res.body.id;
+          this.headers.Authorization = res.body.id;
           resolve(res.data);
 
         }).catch(err => {
@@ -64,7 +68,7 @@ class Connector {
       this.auth().then(() => {
 
         const options = {
-          headers: this.requestHeaders,
+          headers: this.headers,
           params: queryString || {},
         };
 
@@ -93,7 +97,7 @@ class Connector {
       this.auth().then(() => {
 
         const options = {
-          headers: this.requestHeaders,
+          headers: this.headers,
           params: queryString || {},
         };
 
@@ -110,36 +114,36 @@ class Connector {
 
   }
 
-  postFile(path, filePath, queryString, cb) {
+  postFile(path, filePath, queryString) {
 
-    this.auth(
-      function(err) {
-        if (err) return cb(err);
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream(filePath));
 
+    const url = this.baseUrl + path;
 
-        UNIREST.post(self.baseUrl + path)
-          .query(queryString || {})
-          .headers(self.requestHeaders)
-          .attach('file', filePath, {
-            contentType: 'application/json',
-          })
-          .timeout(TIMEOUT)
-          .end(function(response) {
+    return new Promise((resolve, reject) => {
+      this.auth().then(() => {
+        this.headers['Content-Type'] = 'multipart/form-data';
 
+        const options = {
+          headers: this.headers,
+          params: queryString || {},
+        };
 
-            if (response.error) {
-              return cb(response.body);
-            }
+        axios.post(url, formData, options).then(res => {
+          resolve(res.data);
+        }).catch(err => {
+          reject(err.message);
+        });
 
-
-            cb(null, response.body);
-          });
-
+      }).catch(err => {
+        reject(err);
       });
+    });
 
   }
 
-  put(path, data, queryString, cb) {
+  put(path, data, queryString) {
 
     const url = this.baseUrl + path;
 
@@ -147,7 +151,7 @@ class Connector {
       this.auth().then(() => {
 
         const options = {
-          headers: this.requestHeaders,
+          headers: this.headers,
           params: queryString || {},
         };
 
@@ -164,7 +168,7 @@ class Connector {
 
   }
 
-  patch(path, data, queryString, cb) {
+  patch(path, data, queryString) {
 
     const url = this.baseUrl + path;
 
@@ -172,7 +176,7 @@ class Connector {
       this.auth().then(() => {
 
         const options = {
-          headers: this.requestHeaders,
+          headers: this.headers,
           params: queryString || {},
         };
 
@@ -197,11 +201,11 @@ class Connector {
       this.auth().then(() => {
 
         const options = {
-          headers: this.requestHeaders,
+          headers: this.headers,
           params: queryString || {},
         };
 
-        axios.delete(url, options).then(res => {
+        axios.delete(url, options).then(() => {
           resolve();
         }).catch(err => {
           reject(err.message);
