@@ -90,7 +90,7 @@ class Plugin {
     const url = '/plugins/' + pluginId;
     return this.connector.execute('delete', url, null, null);
 
-  };
+  };N
 
   validate(data) {
 
