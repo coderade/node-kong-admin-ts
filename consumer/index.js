@@ -89,9 +89,9 @@ class Consumer {
 
   deleteKeyAuthCredentials(consumerIdOrUsername, keyId) {
 
-    const url = '/consumers/' + consumerIdOrUsername + '/key-auth/' + keyId;
+    const url = `/consumers/${consumerIdOrUsername}/key-auth/${keyId}`;
 
-    return this.connector.execute('delete', url, null, null);
+    return this.connector.execute('delete', url, null, null, keyId);
 
   };
 

@@ -25,7 +25,7 @@ class Connector {
 
     const path = this.baseUrl + '/Users/login';
     const options = {
-      headers: this.headers
+      headers: this.headers,
     };
 
     return new Promise((resolve, reject) => {
@@ -193,9 +193,11 @@ class Connector {
 
   }
 
-  delete(path, queryString) {
+  delete(path, queryString, authToken) {
 
     const url = this.baseUrl + path;
+
+    // this.headers.Authorization = authToken;
 
     return new Promise((resolve, reject) => {
       this.auth().then(() => {
@@ -218,13 +220,13 @@ class Connector {
 
   }
 
-  execute(action, url, data, queryString) {
+  execute(action, url, data, queryString, authToken) {
 
     return new Promise((resolve, reject) => {
 
       if (data) {
 
-        this[action](url, data, queryString).then(results => {
+        this[action](url, data, queryString, authToken).then(results => {
           resolve(results);
         }).catch(err => {
           reject(err);
@@ -232,7 +234,7 @@ class Connector {
 
       } else {
 
-        this[action](url, queryString).then(results => {
+        this[action](url, queryString, authToken).then(results => {
           resolve(results);
         }).catch(err => {
           reject(err);
