@@ -1,6 +1,7 @@
 'use strict';
 import axios from 'axios';
 import * as fs from 'fs';
+import {ConnectorParams, Header, QueryString} from "../types";
 
 const TIMEOUT = 60000;
 
@@ -8,14 +9,14 @@ export class Connector {
     authParams: any;
     authPass: any;
     authUser: any;
-    baseUrl: any;
-    headers: any;
+    baseUrl: string;
+    headers: Header
 
-    constructor(queryString: any) {
-        this.baseUrl = queryString.url;
-        this.authParams = queryString.auth || null;
+    constructor(params: ConnectorParams) {
+        this.baseUrl = params.url;
+        this.authParams = params.auth || null;
         this.headers = {
-            'User-Agent': 'NODE-KONG-ADMIN-1.0.0 (pid: ' + process.pid + ', uid: ' + process.getuid() + ')',
+            'User-Agent': `NODE-KONG-ADMIN-1.0.0 (pid: ${process.pid}, uid: ${process.getuid()})`,
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Connection': 'keep-alive',
@@ -23,14 +24,14 @@ export class Connector {
         };
     }
 
-    auth() {
+    auth(): Promise<any> {
 
         const path = this.baseUrl + '/Users/login';
         const options = {
             headers: this.headers,
         };
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
 
             if (this.headers.Authorization || !this.authParams) {
 
@@ -44,14 +45,12 @@ export class Connector {
                 };
 
                 axios.post(path, data, options).then((res: any) => {
-
                     this.headers.Authorization = res.body.id;
                     resolve(res.data);
 
-                }).catch((err: any) => {
+                }).catch((err: Error) => {
                     const response = {
-                        error: err.error,
-                        body: err.body,
+                        error: err.message
                     };
                     reject(response);
                 });
@@ -62,11 +61,11 @@ export class Connector {
 
     }
 
-    get(path: any, queryString: any) {
+    get(path: string, queryString: QueryString): Promise<any> {
 
         const url = this.baseUrl + path;
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
             this.auth().then(() => {
 
                 const options = {
@@ -84,18 +83,18 @@ export class Connector {
                     }
                 });
 
-            }).catch((err: any) => {
+            }).catch((err: Error) => {
                 reject(err);
             });
         });
 
     }
 
-    post(path: any, data: any, queryString: any) {
+    post(path: string, data: any, queryString: QueryString): Promise<any> {
 
         const url = this.baseUrl + path;
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
             this.auth().then(() => {
 
                 const options = {
@@ -116,16 +115,16 @@ export class Connector {
 
     }
 
-    postFile(path: any, filePath: any, queryString: any) {
+    postFile(path: string, filePath: string, queryString: QueryString): Promise<any> {
 
         const formData = new FormData();
 
-        // @ts-ignore TODO: fix this
+        // @ts-expect-error TODO: Fix this
         formData.append('file', fs.createReadStream(filePath));
 
         const url = this.baseUrl + path;
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
             this.auth().then(() => {
                 this.headers['Content-Type'] = 'multipart/form-data';
 
@@ -136,22 +135,22 @@ export class Connector {
 
                 axios.post(url, formData, options).then((res: any) => {
                     resolve(res.data);
-                }).catch((err: any) => {
+                }).catch((err: Error) => {
                     reject(err.message);
                 });
 
-            }).catch((err: any) => {
+            }).catch((err: Error) => {
                 reject(err);
             });
         });
 
     }
 
-    put(path: any, data: any, queryString: any) {
+    put(path: string, data: any, queryString: QueryString): Promise<any> {
 
         const url = this.baseUrl + path;
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
             this.auth().then(() => {
 
                 const options = {
@@ -161,22 +160,22 @@ export class Connector {
 
                 axios.put(url, data, options).then((res: any) => {
                     resolve(res.data);
-                }).catch((err: any) => {
+                }).catch((err: Error) => {
                     reject(err.message);
                 });
 
-            }).catch((err: any) => {
+            }).catch((err: EXT_sRGB) => {
                 reject(err);
             });
         });
 
     }
 
-    patch(path: any, data: any, queryString: any) {
+    patch(path: string, data: any, queryString: QueryString): Promise<any> {
 
         const url = this.baseUrl + path;
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
             this.auth().then(() => {
 
                 const options = {
@@ -186,22 +185,22 @@ export class Connector {
 
                 axios.patch(url, data, options).then((res: any) => {
                     resolve(res.data);
-                }).catch((err: any) => {
+                }).catch((err: Error) => {
                     reject(err.message);
                 });
 
-            }).catch((err: any) => {
+            }).catch((err: Error) => {
                 reject(err);
             });
         });
 
     }
 
-    delete(path: any, queryString: any, authToken: any) {
+    delete(path: string, queryString?: QueryString, authToken?: string): Promise<never> {
 
         const url = this.baseUrl + path;
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
             this.auth().then(() => {
 
                 const options = {
@@ -211,36 +210,35 @@ export class Connector {
 
                 axios.delete(url, options).then(() => {
                     resolve();
-                }).catch((err: any) => {
+                }).catch((err: Error) => {
                     reject(err.message);
                 });
 
-            }).catch((err: any) => {
+            }).catch((err: Error) => {
                 reject(err);
             });
         });
 
     }
 
-    execute(action: any, url: any, data: any, queryString: any, authToken: any) {
+    execute(action: string, url: string, data?: Record<string, unknown> | null,
+            queryString?: QueryString | null, authToken?: Record<string, unknown>): Promise<any> {
 
-        return new Promise((resolve: any, reject: any) => {
+        return new Promise((resolve, reject) => {
 
             if (data) {
-
                 // @ts-expect-error ts-migrate(7052)
-                this[action](url, data, queryString, authToken).then((results: any) => {
-                    resolve(results);
-                }).catch((err: any) => {
+                this[action](url, data, queryString, authToken).then((res) => {
+                    resolve(res);
+                }).catch((err: Error) => {
                     reject(err);
                 });
 
             } else {
-
                 // @ts-expect-error ts-migrate(7052)
-                this[action](url, queryString, authToken).then((results: any) => {
-                    resolve(results);
-                }).catch((err: any) => {
+                this[action](url, queryString, authToken).then((res) => {
+                    resolve(res);
+                }).catch((err: Error) => {
                     reject(err);
                 });
             }

@@ -1,46 +1,46 @@
 'use strict';
 
 // Library extensions
-import {Config} from './config'
-import {Node} from './node'
-import {Tag} from './tag'
-import {Service} from './service'
-import {Route} from './route'
-import {Upstream} from './upstream'
-import {Target} from './target'
-import {Consumer} from './consumer'
-import {Plugin} from './plugin'
-import {Certificate} from './certificate'
-import {Sni} from './sni'
+import {Config} from './services'
+import {Node} from './services'
+import {Tag} from './services'
+import {Service} from './services'
+import {Route} from './services'
+import {Upstream} from './services'
+import {Target} from './services'
+import {Consumer} from './services'
+import {Plugin} from './services'
+import {Certificate} from './services'
+import {Sni} from './services'
+import {ConnectorParams} from './types'
 
 export class Kong {
-    certificate: any;
-    config: any;
-    consumer: any;
-    node: any;
-    plugin: any;
-    route: any;
-    service: any;
-    sni: any;
-    tag: any;
-    target: any;
-    upstream: any;
-    url: any;
+    certificate: Certificate;
+    config: Config;
+    consumer: Consumer;
+    node: Node;
+    plugin: Plugin;
+    route: Route;
+    service: Service;
+    sni: Sni;
+    tag: Tag;
+    target: Target;
+    upstream: Upstream;
 
-    constructor(params: any) {
+    constructor(params: ConnectorParams) {
 
-        this.url = {url: params.url || 'https://localhost:8001'};
+        params = {url: params.url || 'https://localhost:8001'};
 
-        this.config = new Config(this.url);
-        this.node = new Node(this.url);
-        this.tag = new Tag(this.url);
-        this.service = new Service(this.url);
-        this.route = new Route(this.url);
-        this.upstream = new Upstream(this.url);
-        this.target = new Target(this.url);
-        this.consumer = new Consumer(this.url);
-        this.plugin = new Plugin(this.url);
-        this.certificate = new Certificate(this.url);
-        this.sni = new Sni(this.url);
+        this.config = new Config(params);
+        this.node = new Node(params);
+        this.tag = new Tag(params);
+        this.service = new Service(params);
+        this.route = new Route(params);
+        this.upstream = new Upstream(params);
+        this.target = new Target(params);
+        this.consumer = new Consumer(params);
+        this.plugin = new Plugin(params);
+        this.certificate = new Certificate(params);
+        this.sni = new Sni(params);
     }
 }

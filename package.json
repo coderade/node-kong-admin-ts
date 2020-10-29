@@ -7,6 +7,9 @@
   "engines": {
     "node": ">=10"
   },
+  "scripts": {
+    "build": "tsc"
+  },
   "keywords": [
     "NodeJS",
     "array",
@@ -23,9 +26,6 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc"
-  },
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.14.6",

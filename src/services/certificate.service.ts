@@ -1,41 +1,44 @@
 'use strict'
 import {Connector} from '../connector'
+import {ConnectorParams, ConsumerRequest} from "../types";
+import {DataValidator} from "../validators";
 
 export class Certificate {
-    connector: any;
-    params: any;
-    validate: any;
+    connector: Connector;
+    params: Record<string, unknown>;
+    validator: DataValidator
 
-    constructor(params: any) {
+    constructor(params: ConnectorParams) {
         this.params = params;
         this.connector = new Connector(params);
+        this.validator = new DataValidator();
     }
 
-    create(data: any) {
+    create(data: ConsumerRequest): Promise<any> {
         const url = '/certificates';
-        data = this.validate(data);
+        data = this.validator.validate(data);
         return this.connector.execute('post', url, data, null);
     }
 
-    get(certificateId: any) {
+    get(certificateId: string) {
         const url = '/certificates/' + certificateId;
         return this.connector.execute('get', url, null, null);
     }
 
-    list(offset: any) {
+    list(offset: string) {
         const url = '/certificates';
         return this.connector.execute('get', url, null, {offset: offset});
     }
 
     update(data: any) {
         const url = '/certificates/' + data.id;
-        data = this.validate(data);
+        data = this.validator.validate(data)
         return this.connector.execute('patch', url, data, null);
     }
 
     updateOrCreate(data: any) {
         const url = '/certificates/' + data.id;
-        data = this.validate(data);
+        data = this.validator.validate(data)
         return this.connector.execute('put', url, data, null);
     }
 
