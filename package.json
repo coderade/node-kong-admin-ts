@@ -25,5 +25,8 @@
   "license": "ISC",
   "dependencies": {
     "unirest": "^0.6.0"
+  },
+  "devDependencies": {
+    "ts-migrate": "^0.1.7"
   }
 }
