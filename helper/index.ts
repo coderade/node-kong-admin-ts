@@ -5,7 +5,7 @@ class DataValidator {
 
   constructor() {}
 
-  validate(data) {
+  validate(data: any) {
 
     if (!data || !(data instanceof Object)) {
       throw new Error('Data must be an Object!');
@@ -22,5 +22,6 @@ class DataValidator {
 }
 
 
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
 module.exports = DataValidator;
 

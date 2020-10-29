@@ -1,18 +1,28 @@
 'use strict';
 
 // External libraries
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
 const axios = require('axios');
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
 const fs = require('fs');
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
 const debug = require('debug')('node:kong:admin:connector');
 
 // Library definitions
 const TIMEOUT = 60000;
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Connector'... Remove this comment to see the full error message
 class Connector {
-  constructor(queryString) {
+  authParams: any;
+  authPass: any;
+  authUser: any;
+  baseUrl: any;
+  headers: any;
+  constructor(queryString: any) {
     this.baseUrl = queryString.url;
     this.authParams = queryString.auth || null;
     this.headers = {
+      // @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'process'. Do you need to install... Remove this comment to see the full error message
       'User-Agent': 'NODE-KONG-ADMIN-1.0.0 (pid: ' + process.pid + ', uid: ' + process.getuid() + ')',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -28,7 +38,8 @@ class Connector {
       headers: this.headers,
     };
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
 
       if (this.headers.Authorization || !this.authParams) {
 
@@ -41,12 +52,12 @@ class Connector {
           password: this.authPass,
         };
 
-        axios.post(path, data, options).then(res => {
+        axios.post(path, data, options).then((res: any) => {
 
           this.headers.Authorization = res.body.id;
           resolve(res.data);
 
-        }).catch(err => {
+        }).catch((err: any) => {
           const response = {
             error: err.error,
             body: err.body,
@@ -58,13 +69,14 @@ class Connector {
 
     });
 
-  };
+  }
 
-  get(path, queryString) {
+  get(path: any, queryString: any) {
 
     const url = this.baseUrl + path;
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
       this.auth().then(() => {
 
         const options = {
@@ -72,9 +84,9 @@ class Connector {
           params: queryString || {},
         };
 
-        axios.get(url, options).then(res => {
+        axios.get(url, options).then((res: any) => {
           resolve(res.data);
-        }).catch(err => {
+        }).catch((err: any) => {
           if (err.code === 404) {
             resolve();
           } else {
@@ -82,18 +94,19 @@ class Connector {
           }
         });
 
-      }).catch(err => {
+      }).catch((err: any) => {
         reject(err);
       });
     });
 
   }
 
-  post(path, data, queryString) {
+  post(path: any, data: any, queryString: any) {
 
     const url = this.baseUrl + path;
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
       this.auth().then(() => {
 
         const options = {
@@ -101,27 +114,28 @@ class Connector {
           params: queryString || {},
         };
 
-        axios.post(url, data, options).then(res => {
+        axios.post(url, data, options).then((res: any) => {
           resolve(res.data);
-        }).catch(err => {
+        }).catch((err: any) => {
           reject(err.message);
         });
 
-      }).catch(err => {
+      }).catch((err: any) => {
         reject(err);
       });
     });
 
   }
 
-  postFile(path, filePath, queryString) {
+  postFile(path: any, filePath: any, queryString: any) {
 
     const formData = new FormData();
     formData.append('file', fs.createReadStream(filePath));
 
     const url = this.baseUrl + path;
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
       this.auth().then(() => {
         this.headers['Content-Type'] = 'multipart/form-data';
 
@@ -130,24 +144,25 @@ class Connector {
           params: queryString || {},
         };
 
-        axios.post(url, formData, options).then(res => {
+        axios.post(url, formData, options).then((res: any) => {
           resolve(res.data);
-        }).catch(err => {
+        }).catch((err: any) => {
           reject(err.message);
         });
 
-      }).catch(err => {
+      }).catch((err: any) => {
         reject(err);
       });
     });
 
   }
 
-  put(path, data, queryString) {
+  put(path: any, data: any, queryString: any) {
 
     const url = this.baseUrl + path;
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
       this.auth().then(() => {
 
         const options = {
@@ -155,24 +170,25 @@ class Connector {
           params: queryString || {},
         };
 
-        axios.put(url, data, options).then(res => {
+        axios.put(url, data, options).then((res: any) => {
           resolve(res.data);
-        }).catch(err => {
+        }).catch((err: any) => {
           reject(err.message);
         });
 
-      }).catch(err => {
+      }).catch((err: any) => {
         reject(err);
       });
     });
 
   }
 
-  patch(path, data, queryString) {
+  patch(path: any, data: any, queryString: any) {
 
     const url = this.baseUrl + path;
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
       this.auth().then(() => {
 
         const options = {
@@ -180,26 +196,27 @@ class Connector {
           params: queryString || {},
         };
 
-        axios.patch(url, data, options).then(res => {
+        axios.patch(url, data, options).then((res: any) => {
           resolve(res.data);
-        }).catch(err => {
+        }).catch((err: any) => {
           reject(err.message);
         });
 
-      }).catch(err => {
+      }).catch((err: any) => {
         reject(err);
       });
     });
 
   }
 
-  delete(path, queryString, authToken) {
+  delete(path: any, queryString: any, authToken: any) {
 
     const url = this.baseUrl + path;
 
     // this.headers.Authorization = authToken;
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
       this.auth().then(() => {
 
         const options = {
@@ -209,41 +226,44 @@ class Connector {
 
         axios.delete(url, options).then(() => {
           resolve();
-        }).catch(err => {
+        }).catch((err: any) => {
           reject(err.message);
         });
 
-      }).catch(err => {
+      }).catch((err: any) => {
         reject(err);
       });
     });
 
   }
 
-  execute(action, url, data, queryString, authToken) {
+  execute(action: any, url: any, data: any, queryString: any, authToken: any) {
 
-    return new Promise((resolve, reject) => {
+    // @ts-expect-error ts-migrate(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
+    return new Promise((resolve: any, reject: any) => {
 
       if (data) {
 
-        this[action](url, data, queryString, authToken).then(results => {
+        // @ts-expect-error ts-migrate(7052) FIXME: Element implicitly has an 'any' type because type ... Remove this comment to see the full error message
+        this[action](url, data, queryString, authToken).then((results: any) => {
           resolve(results);
-        }).catch(err => {
+        }).catch((err: any) => {
           reject(err);
         });
 
       } else {
 
-        this[action](url, queryString, authToken).then(results => {
+        // @ts-expect-error ts-migrate(7052) FIXME: Element implicitly has an 'any' type because type ... Remove this comment to see the full error message
+        this[action](url, queryString, authToken).then((results: any) => {
           resolve(results);
-        }).catch(err => {
+        }).catch((err: any) => {
           reject(err);
         });
       }
     });
   }
-
 }
 
 
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
 module.exports = Connector;

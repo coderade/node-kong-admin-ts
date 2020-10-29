@@ -1,94 +1,98 @@
 'use strict';
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Connector'... Remove this comment to see the full error message
 const Connector = require('../connector');
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Service'.
 class Service {
+  connector: any;
+  params: any;
 
-  constructor(params) {
+  constructor(params: any) {
     this.params = params;
     this.connector = new Connector(params);
 
   }
 
-  create(data, cb) {
+  create(data: any, cb: any) {
 
     this.connector.execute('post', '/services', this.validate(data), null, cb);
 
-  };
+  }
 
-  get(nameOrId, cb) {
+  get(nameOrId: any, cb: any) {
 
     this.connector.execute('get', '/services/' + nameOrId, null, null, cb);
 
-  };
+  }
 
-  getByRoute(routeNameOrId, cb) {
+  getByRoute(routeNameOrId: any, cb: any) {
 
     this.connector.execute('get', '/routes/' + routeNameOrId + '/service', null, null, cb);
 
-  };
+  }
 
-  getByPlugin(pluginId, cb) {
+  getByPlugin(pluginId: any, cb: any) {
 
     this.connector.execute('get', '/plugins/' + pluginId + '/service', null, null, cb);
 
-  };
+  }
 
-  list(offset, cb) {
+  list(offset: any, cb: any) {
 
     this.connector.execute('get', '/services', null, offset ? {offset: offset} : null, cb);
 
-  };
+  }
 
-  update(data, cb) {
+  update(data: any, cb: any) {
 
     this.connector.execute('patch', '/services/' + (data.id || data.name), this.validate(data), null, cb);
 
-  };
+  }
 
-  updateByRoute(routeNameOrId, data, cb) {
+  updateByRoute(routeNameOrId: any, data: any, cb: any) {
 
     this.connector.execute('patch', '/routes/' + routeNameOrId + '/service', this.validate(data), null, cb);
 
-  };
+  }
 
-  updateByPlugin(pluginId, data, cb) {
+  updateByPlugin(pluginId: any, data: any, cb: any) {
 
     this.connector.execute('patch', '/plugins/' + pluginId + '/service', this.validate(data), null, cb);
 
-  };
+  }
 
-  updateOrCreate(data, cb) {
+  updateOrCreate(data: any, cb: any) {
 
     this.connector.execute('put', '/services/' + (data.id || data.name), this.validate(data), null, cb);
 
-  };
+  }
 
-  updateOrCreateByRoute(routeNameOrId, data, cb) {
+  updateOrCreateByRoute(routeNameOrId: any, data: any, cb: any) {
 
     this.connector.execute('put', '/routes/' + routeNameOrId + '/service', this.validate(data), null, cb);
 
-  };
+  }
 
-  updateOrCreateByPlugin(pluginId, data, cb) {
+  updateOrCreateByPlugin(pluginId: any, data: any, cb: any) {
 
     this.connector.execute('put', '/plugins/' + pluginId + '/service', this.validate(data), null, cb);
 
-  };
+  }
 
-  delete(nameOrId, cb) {
+  delete(nameOrId: any, cb: any) {
 
     this.connector.execute('delete', '/services/' + nameOrId, null, null, cb);
 
-  };
+  }
 
-  deleteByRoute(routeNameOrId, cb) {
+  deleteByRoute(routeNameOrId: any, cb: any) {
 
     this.connector.execute('delete', '/routes/' + routeNameOrId + '/service', null, null, cb);
 
-  };
+  }
 
-  validate(data) {
+  validate(data: any) {
 
     if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
 
@@ -106,10 +110,10 @@ class Service {
       url: data.url,
     };
 
-  };
-
+  }
 }
 
 
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
 module.exports = Service;
 

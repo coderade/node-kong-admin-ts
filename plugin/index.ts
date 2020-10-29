@@ -1,98 +1,103 @@
 'use strict';
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Connector'... Remove this comment to see the full error message
 const Connector = require('../connector');
 
+// @ts-expect-error ts-migrate(2300) FIXME: Duplicate identifier 'Plugin'.
 class Plugin {
+  connector: any;
+  params: any;
 
-  constructor(params) {
+  constructor(params: any) {
     this.params = params;
     this.connector = new Connector(params);
   }
 
-  create(data) {
+  create(data: any) {
     const url = '/plugins';
     data = this.validate(data);
     return this.connector.execute('post', url, data, null);
-  };
+  }
 
-  createByRoute(routeId, data, cb) {
+  createByRoute(routeId: any, data: any, cb: any) {
     const url = '/routes/' + routeId + '/plugins';
     data = this.validate(data);
     return this.connector.execute('post', url, data, null);
-  };
+  }
 
-  createByService(serviceId, data) {
+  createByService(serviceId: any, data: any) {
     const url = '/services/' + serviceId + '/plugins';
     data = this.validate(data);
     return this.connector.execute('post', url, data, null);
-  };
+  }
 
-  createByConsumer(consumerId, data) {
+  createByConsumer(consumerId: any, data: any) {
     const url = '/consumers/' + consumerId + '/plugins';
     data = this.validate(data);
     return this.connector.execute('post', url, data, null);
-  };
+  }
 
-  get(pluginId) {
+  get(pluginId: any) {
     const url = '/plugins/' + pluginId;
     return this.connector.execute('get', url, null, null);
-  };
+  }
 
 
   getEnabledPlugins() {
     const url = '/plugins/enabled';
     return this.connector.execute('get', url, null, null);
-  };
+  }
 
-  getSchema(pluginName) {
+  getSchema(pluginName: any) {
     const url = '/plugins/schema/' + pluginName;
     return this.connector.execute('get', url, null, null);
-  };
+  }
 
-  list(offset) {
+  list(offset: any) {
     const url = '/plugins';
     const queryString = offset ? {offset: offset} : null;
     return this.connector.execute('get', url, null, queryString);
-  };
+  }
 
-  listByRoute(routeId, offset) {
+  listByRoute(routeId: any, offset: any) {
     const url = '/routes/' + routeId + '/plugins';
     const queryString = offset ? {offset: offset} : null;
     return this.connector.execute('get', url, null, queryString);
-  };
+  }
 
-  listByService(serviceId, offset, cb) {
+  listByService(serviceId: any, offset: any, cb: any) {
     const url = '/services/' + serviceId + '/plugins';
     const queryString = offset ? {offset: offset} : null;
     return this.connector.execute('get', url, null, queryString);
-  };
+  }
 
-  listByConsumer(consumerId, offset) {
+  listByConsumer(consumerId: any, offset: any) {
     const url = '/consumers/' + consumerId + '/plugins';
     const queryString = offset ? {offset: offset} : null;
     return this.connector.execute('get', url, null, queryString);
-  };
+  }
 
-  update(data) {
+  update(data: any) {
     const url = '/plugins/' + data.id;
     data = this.validate(data);
     return this.connector.execute('patch', url, data, null);
-  };
+  }
 
-  updateOrCreate(data) {
+  updateOrCreate(data: any) {
     const url = '/plugins/' + data.id;
     data = this.validate(data);
     return this.connector.execute('put', url, data, null);
 
-  };
+  }
 
-  delete(pluginId) {
+  delete(pluginId: any) {
     const url = '/plugins/' + pluginId;
     return this.connector.execute('delete', url, null, null);
 
-  };N
+  // @ts-expect-error ts-migrate(7008) FIXME: Member 'N' implicitly has an 'any' type.
+  }N
 
-  validate(data) {
+  validate(data: any) {
 
     if (!data || !(data instanceof Object)) {
       throw new Error('Data must be an Object!');
@@ -110,10 +115,10 @@ class Plugin {
       'tags': data.tags,
     };
 
-  };
-
+  }
 }
 
 
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
 module.exports = Plugin;
 

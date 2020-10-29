@@ -1,58 +1,62 @@
 'use strict';
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Connector'... Remove this comment to see the full error message
 const Connector = require('../connector');
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Upstream'.
 class Upstream {
-  constructor(params) {
+  connector: any;
+  params: any;
+  constructor(params: any) {
     this.params = params;
     this.connector = new Connector(params);
   }
 
-  create(data, cb) {
+  create(data: any, cb: any) {
     this.connector.execute('post', '/upstreams', this.validate(data), null, cb);
-  };
+  }
 
-  get(upstreamNameOrId, cb) {
+  get(upstreamNameOrId: any, cb: any) {
     this.connector.execute('get', '/upstreams/' + upstreamNameOrId, null, null, cb);
-  };
+  }
 
-  getByTarget(targetHostAndPortOrId, cb) {
+  getByTarget(targetHostAndPortOrId: any, cb: any) {
     this.connector.execute('get', '/targets/' + targetHostAndPortOrId + '/upstream', null, null, cb);
-  };
+  }
 
-  health(upstreamNameOrId, cb) {
+  health(upstreamNameOrId: any, cb: any) {
     this.connector.execute('get', '/upstreams/' + upstreamNameOrId + '/health', null, null, cb);
-  };
+  }
 
-  list(offset, cb) {
+  list(offset: any, cb: any) {
     this.connector.execute('get', '/upstreams', null, {offset: offset}, cb);
-  };
+  }
 
-  update(data, cb) {
+  update(data: any, cb: any) {
     this.connector.execute('patch', '/upstreams/' + (data.id || data.name), this.validate(data), null, cb);
-  };
+  }
 
-  updateByTarget(targetHostAndPortOrId, data, cb) {
+  updateByTarget(targetHostAndPortOrId: any, data: any, cb: any) {
     this.connector.execute('patch', '/targets/' + targetHostAndPortOrId + '/upstream', this.validate(data), null, cb);
-  };
+  }
 
-  updateOrCreate(data, cb) {
+  updateOrCreate(data: any, cb: any) {
     this.connector.execute('put', '/upstreams/' + (data.id || data.name), this.validate(data), null, cb);
-  };
+  }
 
-  updateOrCreateByTarget(targetHostAndPortOrId, data, cb) {
+  updateOrCreateByTarget(targetHostAndPortOrId: any, data: any, cb: any) {
     this.connector.execute('put', '/targets/' + targetHostAndPortOrId + '/upstream', this.validate(data), null, cb);
-  };
+  }
 
-  delete(upstreamNameOrId, cb) {
+  delete(upstreamNameOrId: any, cb: any) {
     this.connector.execute('delete', '/upstreams/' + upstreamNameOrId, null, null, cb);
-  };
+  }
 
-  deleteByTarget(targetHostAndPortOrId, cb) {
+  deleteByTarget(targetHostAndPortOrId: any, cb: any) {
     this.connector.execute('delete', '/targets/' + targetHostAndPortOrId + '/upstream', null, null, cb);
-  };
+  }
 
-  validate(data) {
+  validate(data: any) {
     if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
     return {
       'name': data.name,
@@ -63,9 +67,9 @@ class Upstream {
       'healthchecks': data.healthchecks,
       'tags': data.tags,
     };
-  };
-
+  }
 }
 
 
+// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
 module.exports = Upstream;
