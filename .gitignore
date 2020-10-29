@@ -1,7 +1,14 @@
-# Libs
+# Dist files
 /node_modules
+/dist
 
 # IDE stuff
 .idea
-.DS_Store
+*.iml
 
+# OS metadata
+.DS_Store
+Thumbs.db
+
+#Log files
+logs

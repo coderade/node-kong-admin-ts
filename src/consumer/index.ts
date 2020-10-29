@@ -1,10 +1,7 @@
 'use strict';
+import {Connector} from '../connector'
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Connector'... Remove this comment to see the full error message
-const Connector = require('../connector');
-
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Consumer'.
-class Consumer {
+export class Consumer {
   connector: any;
   params: any;
 
@@ -120,9 +117,6 @@ class Consumer {
     };
 
   }
+
 }
-
-
-// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
-module.exports = Consumer;
 

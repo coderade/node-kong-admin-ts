@@ -1,10 +1,7 @@
 'use strict';
+import {Connector} from '../connector'
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Connector'... Remove this comment to see the full error message
-const Connector = require('../connector');
-
-// @ts-expect-error ts-migrate(2300) FIXME: Duplicate identifier 'Plugin'.
-class Plugin {
+export class Plugin {
   connector: any;
   params: any;
 
@@ -117,8 +114,4 @@ class Plugin {
 
   }
 }
-
-
-// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
-module.exports = Plugin;
 
