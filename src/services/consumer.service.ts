@@ -31,11 +31,9 @@ export class Consumer {
     }
 
     list(offset: any) {
-
         const url = '/routes';
         const queryString = offset ? {offset: offset} : null;
         return this.connector.execute('get', url, null, queryString);
-
     }
 
     update(data: any) {

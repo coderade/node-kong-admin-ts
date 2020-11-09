@@ -1,6 +1,6 @@
 'use strict';
 
-import {ConsumerRequest, TargetRequest, UpstreamRequest} from "../types";
+import {ConsumerRequest, SniRequest, TargetRequest, UpstreamRequest} from "../types";
 
 export class DataValidator {
 
@@ -46,5 +46,19 @@ export class DataValidator {
             tags: data.tags,
         };
     }
+
+    validateSni(data: SniRequest) {
+
+        if (!data) {
+            throw new Error('Data must be of the SniRequest type');
+        }
+        return {
+            'name': data.name,
+            'tags': data.tags,
+            'certificate': data.certificate,
+        };
+
+    }
+
 
 }

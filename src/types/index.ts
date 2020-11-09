@@ -39,3 +39,10 @@ export type UpstreamRequest = {
     healthchecks: string[],
     tags?: string[];
 }
+
+export type SniRequest = {
+    name: string,
+    id?: string,
+    tags: string[],
+    certificate: string,
+}

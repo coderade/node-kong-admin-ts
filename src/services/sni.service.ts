@@ -1,57 +1,60 @@
 'use strict';
 import {Connector} from '../connector'
+import {ConnectorParams, SniRequest} from "../types";
+import {DataValidator} from "../validators";
 
 export class Sni {
-  connector: any;
-  params: any;
+    connector: Connector;
+    params: ConnectorParams;
+    validator: DataValidator;
 
-  constructor(params: any) {
-    this.params = params;
-    this.connector = new Connector(params);
+    constructor(params: ConnectorParams) {
+        this.params = params;
+        this.connector = new Connector(params);
+        this.validator = new DataValidator();
+    }
 
-  }
+    create(data: SniRequest) {
+        data = this.validator.validateSni(data)
+        return this.connector.execute('post', '/snis', data, null);
+    }
 
-  create(data: any, cb: any) {
-    this.connector.execute('post', '/snis', this.validate(data), null, cb);
-  }
+    createByCertificate(certificateId: string, data: SniRequest) {
+        data = this.validator.validateSni(data)
+        const url = `/certificates/${certificateId}/snis`;
+        return this.connector.execute('post', url, data, null);
+    }
 
-  createByCertificate(certificateNameOrId: any, data: any, cb: any) {
-    this.connector.execute('post', '/certificates/' + certificateNameOrId + '/snis', this.validate(data), null, cb);
-  }
+    get(sniId: string) {
+        const url = `/snis/${sniId}`
+        return this.connector.execute('get', url, null, null);
+    }
 
-  get(sniId: any, cb: any) {
-    this.connector.execute('get', '/snis/' + sniId, null, null, cb);
-  }
+    list(offset: string) {
+        const queryString = offset ? {offset: offset} : null;
+        return this.connector.execute('get', '/snis', null, queryString);
+    }
 
-  list(offset: any, cb: any) {
-    this.connector.execute('get', '/snis', null, {offset: offset}, cb);
-  }
+    listByCertificate(certificateNameOrId: string, offset: string) {
+        const url = `/certificates/${certificateNameOrId}/snis`;
+        const queryString = offset ? {offset: offset} : null;
+        return this.connector.execute('get', url, null, queryString);
+    }
 
-  listByCertificate(certificateNameOrId: any, offset: any, cb: any) {
-    this.connector.execute('get', '/certificates/' + certificateNameOrId + '/snis', null, {offset: offset}, cb);
-  }
+    update(data: SniRequest) {
+        data = this.validator.validateSni(data)
+        const url = `/snis/${data.id || data.name}`;
+        return this.connector.execute('patch', url, data, null);
+    }
 
-  update(data: any, cb: any) {
-    this.connector.execute('patch', '/snis/' + (data.id || data.name), this.validate(data), null, cb);
-  }
+    updateOrCreate(data: SniRequest) {
+        data = this.validator.validateSni(data)
+        const url = `/snis/${data.id || data.name}`;
+        return this.connector.execute('put', url, data, null);
+    }
 
-  updateOrCreate(data: any, cb: any) {
-    this.connector.execute('put', '/snis/' + (data.id || data.name), this.validate(data), null, cb);
-  }
-
-  delete(sniNameOrId: any, cb: any) {
-    this.connector.execute('delete', '/snis/' + sniNameOrId, null, null, cb);
-  }
-
-  validate(data: any) {
-
-    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
-
-    return {
-      'name': data.name,
-      'tags': data.tags,
-      'certificate': data.certificate,
-    };
-
-  }
+    delete(sniId: string) {
+        const url = `/snis/${sniId}`;
+        return this.connector.execute('delete', url, null, null);
+    }
 }
