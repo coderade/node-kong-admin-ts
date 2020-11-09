@@ -1,40 +1,50 @@
 'use strict';
 import {Connector} from '../connector'
+import {ConnectorParams, TargetRequest} from "../types";
+import {DataValidator} from "../validators";
 
 export class Target {
-  connector: any;
-  params: any;
-  constructor(params: any) {
-    this.params = params;
-    this.connector = new Connector(params);
-  }
+    connector: Connector;
+    params: ConnectorParams;
+    validator: DataValidator
 
-  create(data: any, cb: any) {
-    this.connector.execute('post', '/upstreams/' + (data.upstream || data.target) + '/targets', this.validate(data), null, cb);
-  }
 
-  list(upstreamHostAndPortOrId: any, offset: any, cb: any) {
-    this.connector.execute('get', '/upstreams/' + upstreamHostAndPortOrId + '/targets', null, offset ? {offset: offset} : null, cb);
-  }
+    constructor(params: ConnectorParams) {
+        this.params = params;
+        this.connector = new Connector(params);
+        this.validator = new DataValidator();
+    }
 
-  listAll(upstreamNameOrId: any, cb: any) {
-    this.connector.execute('get', '/upstreams/' + upstreamNameOrId + '/targets/all', null, null, cb);
-  }
+    create(data: TargetRequest) {
+        const upstreamId = data.upstream || data.target;
+        const url = `/upstreams/${upstreamId}/targets`
+        const targetData = this.validator.validateTargetData(data)
+        return this.connector.execute('post', url, targetData, null);
+    }
 
-  delete(upstreamNameOrId: any, targetHostAndPortOrId: any, cb: any) {
-    this.connector.execute('delete', '/upstreams/' + upstreamNameOrId + '/targets/' + targetHostAndPortOrId, null, null, cb);
-  }
+    list(upstreamId: string, offset: string) {
+        const url = '/upstreams/' + upstreamId + '/targets'
+        const queryString = offset ? {offset: offset} : null;
+        return this.connector.execute('get', url, null, queryString);
+    }
 
-  setHealthy(upstreamNameOrId: any, targetHostAndPortOrId: any, cb: any) {
-    this.connector.execute('post', '/upstreams/' + upstreamNameOrId + '/targets/' + targetHostAndPortOrId + '/healthy', {}, null, cb);
-  }
+    listAll(upstreamId: string) {
+        const url = `/upstreams/${upstreamId}/targets/all`
+        return this.connector.execute('get', url, null, null);
+    }
 
-  setUnhealthy(upstreamNameOrId: any, targetHostAndPortOrId: any, cb: any) {
-    this.connector.execute('post', '/upstreams/' + upstreamNameOrId + '/targets/' + targetHostAndPortOrId + '/unhealthy', {}, null, cb);
-  }
+    delete(upstreamId: string, targetId: string) {
+        const url = `/upstreams/${upstreamId}/targets/${targetId}`;
+        return this.connector.execute('delete', url, null, null);
+    }
 
-  validate(data: any) {
-    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
-    return {'upstream': {'id': data.upstream}, 'target': data.target, 'weight': data.weight, 'tags': data.tags};
-  }
+    setHealthy(upstreamId: string, targetId: string) {
+        const url = `/upstreams/${upstreamId}/targets/${targetId}/healthy`;
+        return this.connector.execute('post', url, {}, null);
+    }
+
+    setUnhealthy(upstreamId: string, targetId: string) {
+        const url = '/upstreams/' + upstreamId + '/targets/' + targetId + '/unhealthy';
+        return this.connector.execute('post', url, {}, null);
+    }
 }

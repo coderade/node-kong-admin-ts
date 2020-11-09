@@ -20,3 +20,22 @@ export type ConsumerRequest = {
     custom_id?: string,
     tags?: string
 }
+
+
+export type TargetRequest = {
+    upstream?: string,
+    target?: string,
+    weight?: number,
+    tags?: string[];
+}
+
+export type UpstreamRequest = {
+    id?: string,
+    name: string,
+    hash_on?: string,
+    hash_fallback?: string,
+    hash_on_cookie_path?: string,
+    slots?: number,
+    healthchecks: string[],
+    tags?: string[];
+}

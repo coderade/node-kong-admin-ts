@@ -1,68 +1,77 @@
 'use strict';
 import {Connector} from '../connector'
+import {DataValidator} from "../validators";
+import {ConnectorParams, ConsumerRequest, UpstreamRequest} from "../types";
 
 export class Upstream {
-  connector: any;
-  params: any;
-  constructor(params: any) {
-    this.params = params;
-    this.connector = new Connector(params);
-  }
+    connector: Connector;
+    params: ConnectorParams;
+    validator: DataValidator
 
-  create(data: any, cb: any) {
-    this.connector.execute('post', '/upstreams', this.validate(data), null, cb);
-  }
+    constructor(params: ConnectorParams) {
+        this.params = params;
+        this.connector = new Connector(params);
+        this.validator = new DataValidator();
+    }
 
-  get(upstreamNameOrId: any, cb: any) {
-    this.connector.execute('get', '/upstreams/' + upstreamNameOrId, null, null, cb);
-  }
+    create(data: UpstreamRequest) {
+        data = this.validator.validateUpstream(data);
+        return this.connector.execute('post', '/upstreams', data, null);
+    }
 
-  getByTarget(targetHostAndPortOrId: any, cb: any) {
-    this.connector.execute('get', '/targets/' + targetHostAndPortOrId + '/upstream', null, null, cb);
-  }
+    get(upstreamId: string) {
+        const url = `/upstreams/${upstreamId}`;
+        return this.connector.execute('get', url, null, null);
+    }
 
-  health(upstreamNameOrId: any, cb: any) {
-    this.connector.execute('get', '/upstreams/' + upstreamNameOrId + '/health', null, null, cb);
-  }
+    getByTarget(targetId: string) {
+        const url = `/targets/${targetId}/upstream`
+        return this.connector.execute('get', url, null, null);
+    }
 
-  list(offset: any, cb: any) {
-    this.connector.execute('get', '/upstreams', null, {offset: offset}, cb);
-  }
+    health(upstreamId: string) {
+        const url = `/upstreams/${upstreamId}/health`;
+        return this.connector.execute('get', url, null, null);
+    }
 
-  update(data: any, cb: any) {
-    this.connector.execute('patch', '/upstreams/' + (data.id || data.name), this.validate(data), null, cb);
-  }
+    list(offset: string) {
+        const queryString = {offset: offset};
+        return this.connector.execute('get', '/upstreams', null, queryString);
+    }
 
-  updateByTarget(targetHostAndPortOrId: any, data: any, cb: any) {
-    this.connector.execute('patch', '/targets/' + targetHostAndPortOrId + '/upstream', this.validate(data), null, cb);
-  }
+    update(data: UpstreamRequest) {
+        const upstreamData = this.validator.validateUpstream(data);
+        const url = `/upstreams/${upstreamData.id || upstreamData.name}`;
+        return this.connector.execute('patch', url, upstreamData, null);
+    }
 
-  updateOrCreate(data: any, cb: any) {
-    this.connector.execute('put', '/upstreams/' + (data.id || data.name), this.validate(data), null, cb);
-  }
+    updateByTarget(targetId: string, data: UpstreamRequest) {
+        const upstreamData = this.validator.validateUpstream(data);
+        const url = `/targets/${targetId}/upstream`;
+        return this.connector.execute('patch', url, upstreamData, null);
+    }
 
-  updateOrCreateByTarget(targetHostAndPortOrId: any, data: any, cb: any) {
-    this.connector.execute('put', '/targets/' + targetHostAndPortOrId + '/upstream', this.validate(data), null, cb);
-  }
+    updateOrCreate(data: UpstreamRequest) {
+        const upstreamData = this.validator.validateUpstream(data);
+        const url = `/upstreams/${upstreamData.id || upstreamData.name}`;
+        return this.connector.execute('put', url, upstreamData, null);
+    }
 
-  delete(upstreamNameOrId: any, cb: any) {
-    this.connector.execute('delete', '/upstreams/' + upstreamNameOrId, null, null, cb);
-  }
+    updateOrCreateByTarget(targetId: string, data: UpstreamRequest) {
+        const upstreamData = this.validator.validateUpstream(data);
+        const url = `/targets/${targetId}/upstream`;
+        return this.connector.execute('put', url, upstreamData, null);
+    }
 
-  deleteByTarget(targetHostAndPortOrId: any, cb: any) {
-    this.connector.execute('delete', '/targets/' + targetHostAndPortOrId + '/upstream', null, null, cb);
-  }
+    delete(upstreamId: string) {
+        const url = `/upstreams/${upstreamId}`;
+        this.connector.execute('delete', url, null, null);
+    }
 
-  validate(data: any) {
-    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
-    return {
-      'name': data.name,
-      'hash_on': data.hash_on || 'none',
-      'hash_fallback': data.hash_fallback || 'none',
-      'hash_on_cookie_path': data.hash_on_cookie_path || '/',
-      'slots': data.slots || 10000,
-      'healthchecks': data.healthchecks,
-      'tags': data.tags,
-    };
-  }
+    deleteByTarget(targetId: string) {
+        const url = '/targets/' + targetId + '/upstream';
+        return this.connector.execute('delete', url, null, null);
+    }
+
+
 }

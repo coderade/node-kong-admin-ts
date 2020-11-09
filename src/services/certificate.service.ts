@@ -5,7 +5,7 @@ import {DataValidator} from "../validators";
 
 export class Certificate {
     connector: Connector;
-    params: Record<string, unknown>;
+    params: ConnectorParams;
     validator: DataValidator
 
     constructor(params: ConnectorParams) {
@@ -14,7 +14,7 @@ export class Certificate {
         this.validator = new DataValidator();
     }
 
-    create(data: ConsumerRequest): Promise<any> {
+    create(data: ConsumerRequest) {
         const url = '/certificates';
         data = this.validator.validate(data);
         return this.connector.execute('post', url, data, null);
