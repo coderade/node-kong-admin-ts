@@ -90,7 +90,7 @@ export class Connector {
 
     }
 
-    post(path: string, data: any, queryString: QueryString): Promise<any> {
+    post(path: string, data: Record<string, unknown>, queryString: QueryString): Promise<any> {
 
         const url = this.baseUrl + path;
 
@@ -146,7 +146,7 @@ export class Connector {
 
     }
 
-    put(path: string, data: any, queryString: QueryString): Promise<any> {
+    put(path: string, data: Record<string, unknown>, queryString: QueryString): Promise<any> {
 
         const url = this.baseUrl + path;
 
@@ -171,7 +171,7 @@ export class Connector {
 
     }
 
-    patch(path: string, data: any, queryString: QueryString): Promise<any> {
+    patch(path: string, data: Record<string, unknown>, queryString: QueryString): Promise<any> {
 
         const url = this.baseUrl + path;
 

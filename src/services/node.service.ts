@@ -1,6 +1,6 @@
 'use strict';
 import {Connector} from '../connector'
-import {ConnectorParams} from "../types";
+import {ConnectorParams, NodeResponse, NodeStatusResponse} from "../types";
 
 export class Node {
     connector: Connector;
@@ -11,11 +11,11 @@ export class Node {
         this.connector = new Connector(params);
     }
 
-    get() {
+    get(): Promise<NodeResponse> {
         return this.connector.execute('get', '/', null, null);
     }
 
-    status() {
+    status(): Promise<NodeStatusResponse> {
         return this.connector.execute('get', '/status', null, null);
     }
 }
