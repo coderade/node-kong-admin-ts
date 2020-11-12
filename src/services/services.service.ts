@@ -1,112 +1,97 @@
 'use strict';
 import {Connector} from '../connector'
+import {ConnectorParams} from "../types";
+import {DataValidator} from "../validators";
+import {ServiceRequest, ServiceResponse, ServicesList} from "../types/service";
 
 export class Service {
-    connector: any;
-    params: any;
+    connector: Connector;
+    params: ConnectorParams;
+    validator: DataValidator
 
-    constructor(params: any) {
+    constructor(params: ConnectorParams) {
         this.params = params;
         this.connector = new Connector(params);
+        this.validator = new DataValidator();
+    }
+
+
+    create(data: ServiceRequest): Promise<ServiceResponse> {
+        const url = '/services';
+        data = this.validator.validateService(data);
+        return this.connector.execute('post', url, data, null);
+    }
+
+    get(id: string): Promise<ServiceResponse> {
+        const url = `/services/${id}`;
+        return this.connector.execute('get', url, null, null);
 
     }
 
-    create(data: any, cb: any) {
+    getByRoute(routeId: string): Promise<ServiceResponse> {
+        const url = `/routes/${routeId}/service`;
+        return this.connector.execute('get', url, null, null);
+    }
 
-        this.connector.execute('post', '/services', this.validate(data), null, cb);
+    getByPlugin(pluginId: string): Promise<ServiceResponse> {
+        const url = `/plugins/${pluginId}/service`;
+        return this.connector.execute('get', url, null, null);
 
     }
 
-    get(nameOrId: any, cb: any) {
+    list(offset: string): Promise<ServicesList> {
+        const queryString = offset ? {offset: offset} : null;
+        return this.connector.execute('get', '/services', null, queryString);
+    }
 
-        this.connector.execute('get', '/services/' + nameOrId, null, null, cb);
+    update(data: ServiceRequest): Promise<ServiceResponse> {
+        const url = `/services/${data.id || data.name}`;
+        data = this.validator.validateService(data);
+        return this.connector.execute('patch', url, data, null);
 
     }
 
-    getByRoute(routeNameOrId: any, cb: any) {
-
-        this.connector.execute('get', '/routes/' + routeNameOrId + '/service', null, null, cb);
-
-    }
-
-    getByPlugin(pluginId: any, cb: any) {
-
-        this.connector.execute('get', '/plugins/' + pluginId + '/service', null, null, cb);
+    updateByRoute(routeNameOrId: string, data: ServiceRequest): Promise<ServiceResponse> {
+        const url = `/routes/${routeNameOrId}/service`;
+        data = this.validator.validateService(data);
+        return this.connector.execute('patch', url, data, null);
 
     }
 
-    list(offset: any, cb: any) {
-
-        this.connector.execute('get', '/services', null, offset ? {offset: offset} : null, cb);
-
-    }
-
-    update(data: any, cb: any) {
-
-        this.connector.execute('patch', '/services/' + (data.id || data.name), this.validate(data), null, cb);
+    updateByPlugin(pluginId: string, data: ServiceRequest): Promise<ServiceResponse> {
+        const url = `/plugins/${pluginId}/service`;
+        data = this.validator.validateService(data);
+        return this.connector.execute('patch', url, data, null);
 
     }
 
-    updateByRoute(routeNameOrId: any, data: any, cb: any) {
-
-        this.connector.execute('patch', '/routes/' + routeNameOrId + '/service', this.validate(data), null, cb);
-
-    }
-
-    updateByPlugin(pluginId: any, data: any, cb: any) {
-
-        this.connector.execute('patch', '/plugins/' + pluginId + '/service', this.validate(data), null, cb);
+    updateOrCreate(data: ServiceRequest): Promise<ServiceResponse> {
+        const url = '/services/' + (data.id || data.name)
+        data = this.validator.validateService(data);
+        return this.connector.execute('put', url, data, null);
 
     }
 
-    updateOrCreate(data: any, cb: any) {
-
-        this.connector.execute('put', '/services/' + (data.id || data.name), this.validate(data), null, cb);
-
+    updateOrCreateByRoute(routeId: string, data: ServiceRequest): Promise<ServiceResponse> {
+        const url = `/routes/${routeId}/service`
+        data = this.validator.validateService(data);
+        return this.connector.execute('put', url, data, null);
     }
 
-    updateOrCreateByRoute(routeNameOrId: any, data: any, cb: any) {
-
-        this.connector.execute('put', '/routes/' + routeNameOrId + '/service', this.validate(data), null, cb);
-
+    updateOrCreateByPlugin(pluginId: string, data: ServiceRequest): Promise<ServiceResponse> {
+        const url = `/plugins/${pluginId}/service`
+        data = this.validator.validateService(data);
+        return this.connector.execute('put', url, data, null);
     }
 
-    updateOrCreateByPlugin(pluginId: any, data: any, cb: any) {
-
-        this.connector.execute('put', '/plugins/' + pluginId + '/service', this.validate(data), null, cb);
-
+    delete(nameOrId: string): Promise<void> {
+        const url = `/services/${nameOrId}`;
+        return this.connector.execute('delete', url, null, null);
     }
 
-    delete(nameOrId: any, cb: any) {
-
-        this.connector.execute('delete', '/services/' + nameOrId, null, null, cb);
-
-    }
-
-    deleteByRoute(routeNameOrId: any, cb: any) {
-
-        this.connector.execute('delete', '/routes/' + routeNameOrId + '/service', null, null, cb);
-
-    }
-
-    validate(data: any) {
-
-        if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
-
-        return {
-            name: data.name,
-            retries: data.retries || 5,
-            protocol: data.protocol || 'http',
-            host: data.host,
-            port: data.port || 80,
-            path: data.path,
-            connect_timeout: data.connect_timeout || 60000,
-            write_timeout: data.write_timeout || 60000,
-            read_timeout: data.read_timeout || 60000,
-            tags: data.tags,
-            url: data.url,
-        };
-
+    deleteByRoute(routeNameOrId: string): Promise<void> {
+        const url = `/routes/${routeNameOrId}/service`;
+        return this.connector.execute('delete', url, null, null);
     }
 }
 
