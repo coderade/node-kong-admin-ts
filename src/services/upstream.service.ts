@@ -1,7 +1,7 @@
 'use strict';
 import {Connector} from '../connector'
 import {DataValidator} from "../validators";
-import {ConnectorParams, ConsumerRequest, UpstreamRequest} from "../types";
+import {UpstreamRequest, UpstreamResponse, ConnectorParams} from "../types";
 
 export class Upstream {
     connector: Connector;
@@ -14,12 +14,12 @@ export class Upstream {
         this.validator = new DataValidator();
     }
 
-    create(data: UpstreamRequest) {
+    create(data: UpstreamRequest): Promise<UpstreamResponse> {
         data = this.validator.validateUpstream(data);
         return this.connector.execute('post', '/upstreams', data, null);
     }
 
-    get(upstreamId: string) {
+    get(upstreamId: string): Promise<UpstreamResponse> {
         const url = `/upstreams/${upstreamId}`;
         return this.connector.execute('get', url, null, null);
     }

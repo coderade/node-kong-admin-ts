@@ -14,7 +14,7 @@ export class Consumer {
         this.validator = new DataValidator();
     }
 
-    create(data: any) {
+    create(data: any) : Promise<any>{
         const url = '/consumers';
         data = this.validator.validate(data)
         return this.connector.execute('post', url, data, null);
