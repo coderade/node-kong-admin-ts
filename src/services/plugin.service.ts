@@ -1,7 +1,6 @@
 'use strict';
 import {Connector} from '../connector'
-import {ConnectorParams} from "../types";
-import {EnabledPlugins, PluginRequest, PluginResponse, PluginsList} from "../types/plugin";
+import {ConnectorParams, EnabledPlugins, PluginRequest, PluginResponse, PluginsList} from "../types";
 import {DataValidator} from "../validators";
 
 export class Plugin {

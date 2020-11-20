@@ -1,6 +1,7 @@
 'use strict';
 import {Connector} from '../connector'
-import {ConnectorParams} from "../types";
+import {ConnectorParams,TagList} from "../types";
+
 
 export class Tag {
     connector: Connector;
@@ -11,12 +12,12 @@ export class Tag {
         this.connector = new Connector(params);
     }
 
-    list(offset: string) {
+    list(offset: string): Promise<TagList> {
         const queryString = offset ? {offset: offset} : null;
         return this.connector.execute('get', '/tags', null, queryString);
     }
 
-    listByTags(tags: string, offset: string) {
+    listByTags(tags: string, offset: string): Promise<TagList> {
         const url = `/tags/${tags}`;
         const queryString = offset ? {offset: offset} : null;
         return this.connector.execute('get', url, null, queryString);

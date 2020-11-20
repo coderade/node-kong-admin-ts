@@ -1,8 +1,7 @@
 'use strict';
 import {Connector} from '../connector'
-import {ConnectorParams} from "../types";
+import {ConnectorParams, ServiceRequest, ServiceResponse, ServicesList} from "../types";
 import {DataValidator} from "../validators";
-import {ServiceRequest, ServiceResponse, ServicesList} from "../types/service";
 
 export class Service {
     connector: Connector;

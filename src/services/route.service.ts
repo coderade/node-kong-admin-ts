@@ -1,8 +1,7 @@
 'use strict';
 import {Connector} from '../connector'
-import {ConnectorParams} from "../types";
+import {ConnectorParams, RouteList, RouteRequest, RouteResponse} from "../types";
 import {DataValidator} from "../validators";
-import {RouteList, RouteRequest, RouteResponse} from "../types/route";
 
 export class Route {
     connector: Connector;
