@@ -3,6 +3,7 @@
 import {CertificateRequest, ConsumerRequest, SniRequest, TargetRequest, UpstreamRequest} from "../types";
 import {ServiceRequest} from "../types/service";
 import {PluginRequest} from "../types/plugin";
+import {RouteRequest, RouteResponse} from "../types/route";
 
 export class DataValidator {
 
@@ -103,6 +104,31 @@ export class DataValidator {
             protocols: data.protocols || ['http', 'https'],
             enabled: data.enabled,
             tags: data.tags,
+        };
+
+    }
+
+    validateRouteRequest(data: RouteRequest): RouteRequest {
+
+        if (!data) {
+            throw new Error('Data must be of the RouteRequest type');
+        }
+
+        return {
+            name: data.name,
+            protocols: data.protocols || ['http', 'https'],
+            methods: data.methods,
+            hosts: data.hosts,
+            paths: data.paths,
+            regex_priority: data.regex_priority || 0,
+            strip_path: data.strip_path,
+            preserve_host: data.preserve_host,
+            tags: data.tags,
+            snis: data.snis,
+            sources: data.sources,
+            destinations: data.destinations,
+            https_redirect_status_code: data.https_redirect_status_code || 301,
+            service: data.service,
         };
 
     }

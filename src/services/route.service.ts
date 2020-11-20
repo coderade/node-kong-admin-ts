@@ -1,101 +1,80 @@
 'use strict';
 import {Connector} from '../connector'
+import {ConnectorParams} from "../types";
+import {DataValidator} from "../validators";
+import {RouteList, RouteRequest, RouteResponse} from "../types/route";
 
 export class Route {
-  connector: any;
-  params: any;
+    connector: Connector;
+    params: ConnectorParams;
+    validator: DataValidator
 
-  constructor(params: any) {
-    this.params = params;
-    this.connector = new Connector(params);
-  }
+    constructor(params: ConnectorParams) {
+        this.params = params;
+        this.connector = new Connector(params);
+        this.validator = new DataValidator();
+    }
 
-  create(data: any, cb: any) {
+    create(data: RouteRequest): Promise<RouteResponse> {
+        data = this.validator.validateRouteRequest(data);
+        return this.connector.execute('post', '/routes', data, null);
+    }
 
-    this.connector.execute('post', '/routes', this.validate(data), null, cb);
+    createByService(serviceNameOrId: string, data: RouteRequest): Promise<RouteResponse> {
+        const url = `/services/${serviceNameOrId}/routes`;
+        data = this.validator.validateRouteRequest(data);
+        return this.connector.execute('post', url, data, null);
+    }
 
-  }
+    get(nameOrId: string): Promise<RouteResponse> {
+        const url = `/routes/${nameOrId}`;
+        return this.connector.execute('get', url, null, null);
+    }
 
-  createByService(serviceNameOrId: any, data: any, cb: any) {
+    getByPlugin(pluginId: string): Promise<RouteResponse> {
+        const url = `/plugins/${pluginId}/route`;
+        return this.connector.execute('get', url, null, null);
+    }
 
-    this.connector.execute('post', '/services/' + serviceNameOrId + '/routes', this.validate(data), null, cb);
+    list(offset: string): Promise<RouteList> {
+        const queryString = offset ? {offset: offset} : null;
+        return this.connector.execute('get', '/routes', null, queryString);
+    }
 
-  }
+    listByService(serviceNameOrId: string, offset: string): Promise<RouteList> {
+        const url = `/services/${serviceNameOrId}/routes`;
+        const queryString = offset ? {offset: offset} : null;
+        return this.connector.execute('get', url, null, queryString);
+    }
 
-  get(nameOrId: any, cb: any) {
+    update(data: RouteRequest): Promise<RouteResponse> {
+        const url = `/routes/${data.id || data.name}`;
+        data = this.validator.validateRouteRequest(data);
+        return this.connector.execute('patch', url, data, null);
+    }
 
-    this.connector.execute('get', '/routes/' + nameOrId, null, null, cb);
+    updateByPlugin(pluginId: string, data: RouteRequest): Promise<RouteResponse> {
+        const url = `/plugins/${pluginId}/route`;
+        data = this.validator.validateRouteRequest(data);
+        return this.connector.execute('patch', url, data, null);
+    }
 
-  }
+    updateOrCreate(data: RouteRequest): Promise<RouteResponse> {
+        const url = `/routes/${data.id || data.name}`;
+        data = this.validator.validateRouteRequest(data);
+        return this.connector.execute('put', url, data, null);
+    }
 
-  getByPlugin(pluginId: any, cb: any) {
+    updateOrCreateByPlugin(pluginId: string, data: RouteRequest): Promise<RouteResponse> {
+        const url = '/plugins/' + pluginId + '/route';
+        data = this.validator.validateRouteRequest(data);
+        return this.connector.execute('put', url, data, null);
+    }
 
-    this.connector.execute('get', '/plugins/' + pluginId + '/route', null, null, cb);
+    delete(nameOrId: string): Promise<void> {
+        const url = '/routes/' + nameOrId;
+        return this.connector.execute('delete', url, null, null);
+    }
 
-  }
-
-  list(offset: any, cb: any) {
-
-    this.connector.execute('get', '/routes', null, offset ? {offset: offset} : null, cb);
-
-  }
-
-  listByService(serviceNameOrId: any, offset: any, cb: any) {
-
-    this.connector.execute('get', '/services/' + serviceNameOrId + '/routes', null, offset ? {offset: offset} : null, cb);
-
-  }
-
-  update(data: any, cb: any) {
-
-    this.connector.execute('patch', '/routes/' + (data.id || data.name), this.validate(data), null, cb);
-
-  }
-
-  updateByPlugin(pluginId: any, data: any, cb: any) {
-
-    this.connector.execute('patch', '/plugins/' + pluginId + '/route', this.validate(data), null, cb);
-
-  }
-
-  updateOrCreate(data: any, cb: any) {
-
-    this.connector.execute('put', '/routes/' + (data.id || data.name), this.validate(data), null, cb);
-
-  }
-
-  updateOrCreateByPlugin(pluginId: any, data: any, cb: any) {
-
-    this.connector.execute('put', '/plugins/' + pluginId + '/route', this.validate(data), null, cb);
-
-  }
-
-  delete(nameOrId: any, cb: any) {
-
-    this.connector.execute('delete', '/routes/' + nameOrId, null, null, cb);
-
-  }
-
-  validate(data: any) {
-
-    if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
-
-    return {
-      'name': data.name,
-      'protocols': data.protocols || ['http', 'https'],
-      'methods': data.methods,
-      'hosts': data.hosts,
-      'paths': data.paths,
-      'regex_priority': data.regex_priority || 0,
-      'strip_path': data.strip_path,
-      'preserve_host': data.preserve_host,
-      'tags': data.tags,
-      'snis': data.snis,
-      'sources': data.sources,
-      'destinations': data.destinations,
-      'service': data.service,
-    };
-
-  }
 }
 
