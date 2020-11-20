@@ -52,7 +52,7 @@ export class DataValidator {
         };
     }
 
-    validateSni(data: SniRequest): SniRequest {
+    validateSniRequest(data: SniRequest): SniRequest {
 
         if (!data) {
             throw new Error('Data must be of the SniRequest type');

@@ -1,7 +1,7 @@
 export type CertificateRequest = {
-    cert: string;
+    cert?: string;
     id?: string
-    key: number;
+    key?: number;
     tags?: string[]
     snis?: string[]
 }

@@ -35,7 +35,7 @@ export class Upstream {
     }
 
     list(offset: string) {
-        const queryString = {offset: offset};
+        const queryString = offset ? {offset: offset} : null;
         return this.connector.execute('get', '/upstreams', null, queryString);
     }
 

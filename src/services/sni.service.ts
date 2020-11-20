@@ -1,6 +1,6 @@
 'use strict';
 import {Connector} from '../connector'
-import {ConnectorParams, SniRequest} from "../types";
+import {ConnectorParams, SniList, SniRequest, SniResponse} from "../types";
 import {DataValidator} from "../validators";
 
 export class Sni {
@@ -14,46 +14,46 @@ export class Sni {
         this.validator = new DataValidator();
     }
 
-    create(data: SniRequest) {
-        data = this.validator.validateSni(data)
+    create(data: SniRequest): Promise<SniResponse> {
+        data = this.validator.validateSniRequest(data)
         return this.connector.execute('post', '/snis', data, null);
     }
 
-    createByCertificate(certificateId: string, data: SniRequest) {
-        data = this.validator.validateSni(data)
+    createByCertificate(certificateId: string, data: SniRequest): Promise<SniResponse> {
+        data = this.validator.validateSniRequest(data)
         const url = `/certificates/${certificateId}/snis`;
         return this.connector.execute('post', url, data, null);
     }
 
-    get(sniId: string) {
+    get(sniId: string): Promise<SniResponse> {
         const url = `/snis/${sniId}`
         return this.connector.execute('get', url, null, null);
     }
 
-    list(offset: string) {
+    list(offset: string): Promise<SniList> {
         const queryString = offset ? {offset: offset} : null;
         return this.connector.execute('get', '/snis', null, queryString);
     }
 
-    listByCertificate(certificateNameOrId: string, offset: string) {
+    listByCertificate(certificateNameOrId: string, offset: string): Promise<SniList> {
         const url = `/certificates/${certificateNameOrId}/snis`;
         const queryString = offset ? {offset: offset} : null;
         return this.connector.execute('get', url, null, queryString);
     }
 
-    update(data: SniRequest) {
-        data = this.validator.validateSni(data)
+    update(data: SniRequest): Promise<SniResponse> {
+        data = this.validator.validateSniRequest(data)
         const url = `/snis/${data.id || data.name}`;
         return this.connector.execute('patch', url, data, null);
     }
 
-    updateOrCreate(data: SniRequest) {
-        data = this.validator.validateSni(data)
+    updateOrCreate(data: SniRequest): Promise<SniResponse> {
+        data = this.validator.validateSniRequest(data)
         const url = `/snis/${data.id || data.name}`;
         return this.connector.execute('put', url, data, null);
     }
 
-    delete(sniId: string) {
+    delete(sniId: string): Promise<SniResponse> {
         const url = `/snis/${sniId}`;
         return this.connector.execute('delete', url, null, null);
     }
