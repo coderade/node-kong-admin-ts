@@ -7,7 +7,7 @@ export class Target {
     connector: Connector;
     params: ConnectorParams;
     validator: DataValidator
-    
+
     constructor(params: ConnectorParams) {
         this.params = params;
         this.connector = new Connector(params);
