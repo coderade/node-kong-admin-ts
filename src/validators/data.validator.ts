@@ -1,7 +1,8 @@
 'use strict';
 
-import {ConsumerRequest, SniRequest, TargetRequest, UpstreamRequest} from "../types";
+import {CertificateRequest, ConsumerRequest, SniRequest, TargetRequest, UpstreamRequest} from "../types";
 import {ServiceRequest} from "../types/service";
+import {PluginRequest} from "../types/plugin";
 
 export class DataValidator {
 
@@ -86,7 +87,7 @@ export class DataValidator {
     }
 
 
-    validatePlugin(data: any) {
+    validatePlugin(data: PluginRequest): PluginRequest {
 
         if (!data) {
             throw new Error('Data must be of the PluginRequest type');

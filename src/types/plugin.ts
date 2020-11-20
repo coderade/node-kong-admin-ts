@@ -8,6 +8,7 @@ export type PluginRequest = {
     service?: ServiceRequest,
     consumer?: ConsumerRequest,
     config?: PluginConfig,
+    run_on?: string,
     protocols: string[],
     enabled?: boolean,
     tags?: string[],

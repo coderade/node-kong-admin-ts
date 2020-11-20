@@ -1,6 +1,6 @@
 'use strict'
 import {Connector} from '../connector'
-import {ConnectorParams, ConsumerRequest} from "../types";
+import {CertificateList, CertificateRequest, CertificateResponse, ConnectorParams} from "../types";
 import {DataValidator} from "../validators";
 
 export class Certificate {
@@ -14,36 +14,34 @@ export class Certificate {
         this.validator = new DataValidator();
     }
 
-    create(data: ConsumerRequest) {
+    create(data: CertificateRequest): Promise<CertificateResponse> {
         const url = '/certificates';
-        data = this.validator.validate(data);
         return this.connector.execute('post', url, data, null);
     }
 
-    get(certificateId: string) {
-        const url = '/certificates/' + certificateId;
-        return this.connector.execute('get', url, null, null);
+    get(certificateId: string): Promise<CertificateResponse> {
+        const url = `/certificates/${certificateId}`
+        return this.connector.execute('get', url, null, null)
     }
 
-    list(offset: string) {
-        const url = '/certificates';
-        return this.connector.execute('get', url, null, {offset: offset});
+    list(offset: string): Promise<CertificateList> {
+        const url = '/certificates'
+        const queryString = offset ? {offset: offset} : null;
+        return this.connector.execute('get', url, null, queryString);
     }
 
-    update(data: any) {
-        const url = '/certificates/' + data.id;
-        data = this.validator.validate(data)
+    update(data: CertificateRequest): Promise<CertificateResponse> {
+        const url = `/certificates/${data.id}`;
         return this.connector.execute('patch', url, data, null);
     }
 
-    updateOrCreate(data: any) {
-        const url = '/certificates/' + data.id;
-        data = this.validator.validate(data)
+    updateOrCreate(data: CertificateRequest): Promise<CertificateResponse> {
+        const url = `/certificates/${data.id}`;
         return this.connector.execute('put', url, data, null);
     }
 
-    delete(certificateId: any) {
-        const url = '/certificates/' + certificateId;
+    delete(certificateId: string): Promise<void> {
+        const url = `/certificates/${certificateId}`;
         return this.connector.execute('delete', url, null, null);
 
     }
