@@ -4,7 +4,8 @@ export type ConnectorParams = {
 };
 
 export type QueryString = {
-    offset: string
+    offset?: string,
+    balancer_health?: string
 }
 
 export type Header = {

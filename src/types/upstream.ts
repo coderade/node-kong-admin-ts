@@ -61,3 +61,22 @@ export type Healthchecks = {
     passive: Passive;
 }
 
+export type UpstreamList = {
+    data: UpstreamResponse[],
+    next?: string
+}
+
+export type UpstreamHealth = {
+    created_at: number,
+    id: string,
+    health: string,
+    target: string,
+    upstream_id: string,
+    weight: number
+}
+
+export type UpstreamsHealth = {
+    total: number,
+    node_id: string,
+    data: UpstreamHealth[]
+}
