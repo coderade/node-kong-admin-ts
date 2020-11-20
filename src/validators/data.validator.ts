@@ -1,6 +1,7 @@
 'use strict';
 
 import {ConsumerRequest, SniRequest, TargetRequest, UpstreamRequest} from "../types";
+import {ServiceRequest} from "../types/service";
 
 export class DataValidator {
 
@@ -31,10 +32,12 @@ export class DataValidator {
         };
     }
 
-    validateUpstream(data: UpstreamRequest) {
+    validateUpstream(data: UpstreamRequest): UpstreamRequest {
+
         if (!data) {
             throw new Error('Data must be of the UpstreamRequest type');
         }
+
         return {
             id: data.id || undefined,
             name: data.name,
@@ -47,22 +50,24 @@ export class DataValidator {
         };
     }
 
-    validateSni(data: SniRequest) {
+    validateSni(data: SniRequest): SniRequest {
 
         if (!data) {
             throw new Error('Data must be of the SniRequest type');
         }
         return {
-            'name': data.name,
-            'tags': data.tags,
-            'certificate': data.certificate,
+            name: data.name,
+            tags: data.tags,
+            certificate: data.certificate,
         };
 
     }
 
-    validateService(data: any) {
+    validateService(data: ServiceRequest): ServiceRequest {
 
-        if (!data || !(data instanceof Object)) throw new Error('Data must be an Object!');
+        if (!data) {
+            throw new Error('Data must be of the ServiceRequest type');
+        }
 
         return {
             name: data.name,
@@ -76,6 +81,27 @@ export class DataValidator {
             read_timeout: data.read_timeout || 60000,
             tags: data.tags,
             url: data.url,
+        };
+
+    }
+
+
+    validatePlugin(data: any) {
+
+        if (!data) {
+            throw new Error('Data must be of the PluginRequest type');
+        }
+
+        return {
+            name: data.name,
+            route: data.route,
+            service: data.service,
+            consumer: data.consumer,
+            config: data.config,
+            run_on: data.run_on || 'first',
+            protocols: data.protocols || ['http', 'https'],
+            enabled: data.enabled,
+            tags: data.tags,
         };
 
     }

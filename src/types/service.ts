@@ -10,7 +10,7 @@ export type ServiceRequest = {
     write_timeout?: number,
     read_timeout?: number,
     tags?: string[],
-    url: string,
+    url?: string,
 }
 
 export type ServiceResponse = {

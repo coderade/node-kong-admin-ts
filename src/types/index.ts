@@ -3,6 +3,7 @@ export * from './consumer';
 export * from './node';
 export * from './sni';
 export * from './target';
+export * from './keyAuth';
 export * from './upstream';
 
 

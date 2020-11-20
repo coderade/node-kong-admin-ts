@@ -1,8 +1,7 @@
 'use strict';
 import {Connector} from '../connector'
 import {DataValidator} from '../validators'
-import {ConnectorParams, ConsumerList, ConsumerRequest, ConsumerResponse} from "../types";
-import {KeyAuthList, KeyAuthResponse} from "../types/keyAuth";
+import {ConnectorParams, ConsumerList, ConsumerRequest, ConsumerResponse, KeyAuthList, KeyAuthResponse} from "../types";
 
 export class Consumer {
     connector: Connector;
