@@ -1,7 +1,7 @@
 'use strict';
 import {Connector} from '../connector'
 import {DataValidator} from '../validators'
-import {ConnectorParams, ConsumerList, ConsumerRequest, ConsumerResponse} from "../types";
+import {ConnectorParams, ConsumerList, ConsumerRequest, ConsumerResponse, KeyAuthList, KeyAuthResponse} from "../types";
 
 export class Consumer {
     connector: Connector;
@@ -60,18 +60,18 @@ export class Consumer {
         return this.connector.execute('put', url, data, null);
     }
 
-    createKeyAuthCredentials(consumerId: string, keyAuthId: string) {
+    createKeyAuthCredentials(consumerId: string, keyAuthId: string): Promise<KeyAuthResponse> {
         const url = `/consumers/${consumerId}/key-auth`;
         const data = {key: keyAuthId};
         return this.connector.execute('post', url, data, null);
     }
 
-    listKeyAuthCredentials(consumerId: string) {
+    listKeyAuthCredentials(consumerId: string): Promise<KeyAuthList> {
         const url = `/consumers/${consumerId}/key-auth`;
         return this.connector.execute('get', url, null, null);
     }
 
-    deleteKeyAuthCredentials(consumerId: string, key: string) {
+    deleteKeyAuthCredentials(consumerId: string, key: string): Promise<void> {
         const url = `/consumers/${consumerId}/key-auth/${key}`;
         return this.connector.execute('delete', url, null, null);
     }

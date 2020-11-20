@@ -6,11 +6,13 @@ export type ConsumerRequest = {
 
 export type ConsumerResponse =  {
     id: string;
-    custom_id: string;
-    created_at: number;
+    custom_id?: string;
+    created_at?: number;
 }
 
 export type ConsumerList = {
     data: ConsumerResponse[],
     next?: string
 }
+
+
