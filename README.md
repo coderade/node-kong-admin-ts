@@ -24,7 +24,8 @@ import {KongAdminAPI} from '@coderade/node-kong-admin-ts';
 
 ## Documentation
 
-To know more about the available endpoints take a look on Kong official Admin API [documentation](https://docs.konghq.com/2.0.x/admin-api/)
+To know more about the available endpoints take a look on Kong official Admin API 
+[documentation](https://docs.konghq.com/2.0.x/admin-api/).
 
 #### Acknowledgements
 

@@ -1,6 +1,6 @@
 {
   "name": "@coderade/node-kong-admin-ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A port of the Kong Admin API Client (node-kong-admin) project for NodeJS/Typescript",
   "homepage": "https://github.com/coderade/node-kong-admin-ts",
   "author": "coderade",
