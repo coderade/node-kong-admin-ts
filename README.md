@@ -6,7 +6,7 @@ for NodeJS/Typescript.
 ## Install
 
 ```console
-$ npm install @coderade/node-kong-admin-ts
+$ npm install @coderade/node-kong-admin-ts --save-dev
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ const KongAdminAPI = require('@coderade/node-kong-admin-ts');
 import {KongAdminAPI} from '@coderade/node-kong-admin-ts';
 ```
 
-##Documentation
+## Documentation
 
 To know more about the available endpoints take a look on Kong official Admin API [documentation](https://docs.konghq.com/2.0.x/admin-api/)
 
