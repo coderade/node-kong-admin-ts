@@ -1,9 +1,10 @@
 {
-  "name": "node-kong-admin-ts",
+  "name": "@coderade/node-kong-admin-ts",
   "version": "1.0.1",
   "description": "A port of the Kong Admin API Client (node-kong-admin) project for NodeJS/Typescript",
   "homepage": "https://github.com/coderade/node-kong-admin-ts",
-  "author": "Valdeci Gomes",
+  "author": "coderade",
+  "private": false,
   "engines": {
     "node": ">=10"
   },
