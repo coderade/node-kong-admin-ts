@@ -12,12 +12,12 @@ $ npm install @coderade/node-kong-admin-ts --save-dev
 ## Usage
 
 
-#### ES6
+#### CommonJS 
 ```js
 const KongAdminAPI = require('@coderade/node-kong-admin-ts');
 ```
 
-#### Typescript
+#### ES6
 ```js
 import {KongAdminAPI} from '@coderade/node-kong-admin-ts';
 ```
