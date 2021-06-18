@@ -77,7 +77,7 @@ export class Connector {
                     resolve(res.data);
                 }).catch((err: any) => {
                     if (err.code === 404) {
-                        resolve();
+                        resolve(null);
                     } else {
                         reject(err.message);
                     }
@@ -196,7 +196,7 @@ export class Connector {
 
     }
 
-    delete(path: string, queryString?: QueryString, authToken?: string): Promise<never> {
+    delete(path: string, queryString?: QueryString, authToken?: string): Promise<any> {
 
         const url = this.baseUrl + path;
 
@@ -209,7 +209,7 @@ export class Connector {
                 };
 
                 axios.delete(url, options).then(() => {
-                    resolve();
+                    resolve(null);
                 }).catch((err: Error) => {
                     reject(err.message);
                 });
